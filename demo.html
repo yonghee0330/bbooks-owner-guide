@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta name="robots" content="noindex">
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root {
+    --bg: #f7f4ee; --card: #ffffff; --ink: #1d2521; --sub: #5f6b65; --faint: #8d9690; --line: #e6e1d7;
+    --accent: #2f5d50; --accent-soft: #e4eee9; --amber: #a86a12; --amber-soft: #f8ecd6;
+    --red: #b3412f; --red-soft: #f7e3df; --gray-soft: #eeece7;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151916; --card: #1d231f; --ink: #e8ece9; --sub: #a9b3ad; --faint: #7d8781; --line: #2d3530;
+      --accent: #7fc0a9; --accent-soft: #223a31; --amber: #e3ac57; --amber-soft: #3a2f1c;
+      --red: #ec8b79; --red-soft: #3d2420; --gray-soft: #262c28;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); }
+  body { font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+         font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 16px 48px; }
+  header { padding: 28px 0 18px; }
+  .brand { font-size: 12px; letter-spacing: .08em; color: var(--faint); font-weight: 600; }
+  h1 { font-size: 26px; line-height: 1.25; margin: 6px 0 10px; font-weight: 750; letter-spacing: -0.02em; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .chip { font-size: 12px; padding: 3px 9px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 650; }
+  .updated { font-size: 12px; color: var(--faint); margin-left: 4px; }
+  .notice { background: var(--amber-soft); color: var(--ink); border-radius: 12px; padding: 12px 14px; font-size: 14px; margin-bottom: 14px; white-space: pre-line; }
+  .notice b { color: var(--amber); display: block; font-size: 12px; margin-bottom: 2px; }
+  .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  .kpi { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  .kpi .label { font-size: 12px; color: var(--sub); font-weight: 600; }
+  .kpi .value { font-size: 22px; font-weight: 750; margin-top: 2px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .kpi .value small { font-size: 14px; font-weight: 600; color: var(--sub); margin-left: 2px; }
+  .kpi .hint { font-size: 12px; color: var(--faint); margin-top: 2px; }
+  .kpi.primary { background: var(--accent); border-color: var(--accent); }
+  .kpi.primary .label, .kpi.primary .hint, .kpi.primary .value small { color: rgba(255,255,255,.78); }
+  .kpi.primary .value { color: #fff; }
+  @media (prefers-color-scheme: dark) { .kpi.primary .value { color: #0f1a15; } .kpi.primary .label, .kpi.primary .hint, .kpi.primary .value small { color: rgba(15,26,21,.72); } }
+  nav.tabs { position: sticky; top: 0; z-index: 5; background: var(--bg); display: flex; gap: 4px; padding: 8px 0; border-bottom: 1px solid var(--line); margin-bottom: 14px; }
+  nav.tabs button { flex: 1; border: 0; background: transparent; color: var(--sub); font: inherit; font-size: 14px; font-weight: 650; padding: 9px 4px; border-radius: 10px; cursor: pointer; }
+  nav.tabs button[aria-selected="true"] { background: var(--card); color: var(--ink); box-shadow: 0 1px 0 var(--line), 0 0 0 1px var(--line); }
+  .panel { display: none; } .panel.on { display: block; }
+  .toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 10px; }
+  input[type=search], input[type=text], input[type=number], select, textarea {
+    font: inherit; font-size: 16px; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; width: 100%; }
+  textarea { min-height: 72px; resize: vertical; }
+  input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+  .seg { display: flex; gap: 6px; flex-wrap: wrap; }
+  .seg button { border: 1px solid var(--line); background: var(--card); color: var(--sub); font: inherit; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .dl { border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; font-size: 13px; font-weight: 650; padding: 9px 12px; border-radius: 10px; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+  .dl:disabled { opacity: .55; cursor: default; }
+  #q { flex: 1; min-width: 0; width: auto; }
+  label.check { font-size: 13px; color: var(--sub); display: inline-flex; gap: 6px; align-items: center; margin-left: auto; cursor: pointer; }
+  .list { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .row { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-top: 1px solid var(--line); }
+  .row:first-child { border-top: 0; }
+  .row .main { flex: 1; min-width: 0; }
+  .row .title { font-weight: 600; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .row .meta { font-size: 12.5px; color: var(--sub); margin-top: 2px; }
+  .row.item { cursor: pointer; }
+  .row.item:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .hist { padding: 4px 14px 12px; background: var(--bg); display: grid; gap: 6px; }
+  .hist .hl { display: flex; gap: 10px; align-items: flex-start; font-size: 12.5px; }
+  .hist .hk { flex-shrink: 0; width: 64px; color: var(--sub); font-weight: 600; padding-top: 3px; }
+  .hist .hv { display: flex; flex-wrap: wrap; gap: 4px; }
+  .hist .hv.none { color: var(--faint); padding-top: 3px; }
+  .chip2 { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 2px 7px; font-variant-numeric: tabular-nums; }
+  .row .pub { font-size: 12.5px; color: var(--ink); opacity: .8; margin-top: 2px; }
+  .row .side { text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+  .left { font-size: 20px; font-weight: 750; line-height: 1.1; }
+  .left small { font-size: 12px; font-weight: 600; color: var(--sub); margin-left: 1px; }
+  .left.zero { color: var(--faint); }
+  .sub { font-size: 12px; color: var(--faint); }
+  .badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 6px; margin-left: 4px; vertical-align: 1px; }
+  .b-green { background: var(--accent-soft); color: var(--accent); }
+  .b-amber { background: var(--amber-soft); color: var(--amber); }
+  .b-red { background: var(--red-soft); color: var(--red); }
+  .b-gray { background: var(--gray-soft); color: var(--sub); }
+  .summary { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; font-size: 13px; color: var(--sub); margin: 2px 2px 10px; }
+  .summary b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .empty { padding: 28px 16px; text-align: center; color: var(--faint); font-size: 14px; }
+  .more { display: block; width: 100%; border: 0; background: transparent; color: var(--accent); font: inherit; font-weight: 650; padding: 12px; cursor: pointer; border-top: 1px solid var(--line); }
+  .split { display: grid; gap: 2px; margin-top: 6px; font-size: 12.5px; color: var(--sub); }
+  .split b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .split em { font-style: normal; font-size: 11px; font-weight: 700; color: var(--accent); background: var(--accent-soft); padding: 1px 6px; border-radius: 5px; margin-left: 2px; }
+  .note { font-size: 12.5px; color: var(--faint); margin: 10px 2px 0; }
+  form.req { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 12px; margin-bottom: 18px; }
+  form.req .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  form.req label { font-size: 12.5px; font-weight: 650; color: var(--sub); display: grid; gap: 5px; }
+  form.req label.off { opacity: .55; }
+  form.req .field { display: grid; gap: 6px; }
+  form.req .lbl { font-size: 12.5px; font-weight: 650; color: var(--sub); }
+  form.req .seg button { flex: 1; min-width: 0; padding: 9px 10px; font-size: 14px; }
+  form.req .seg { flex-wrap: nowrap; }
+  form.req .seg button:disabled { opacity: .4; cursor: not-allowed; }
+  form.req .hint { font-size: 12px; color: var(--faint); }
+  .fee { background: var(--accent-soft); border-radius: 10px; padding: 10px 12px; font-size: 13px; display: grid; gap: 2px; }
+  .fee b { font-size: 12px; color: var(--accent); }
+  .box { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+  .box h3 { font-size: 14px; margin: 0 0 10px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .box h3 small { font-size: 12px; font-weight: 600; color: var(--sub); }
+  .sbar { display: flex; gap: 8px; }
+  .sbar input { flex: 1; min-width: 0; }
+  .btn2 { border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; font-size: 14px; font-weight: 650; padding: 9px 14px; border-radius: 10px; cursor: pointer; white-space: nowrap; }
+  .btn2.dark { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .btn2:disabled { opacity: .5; cursor: default; }
+  .results { margin-top: 10px; display: grid; gap: 2px; }
+  .res { display: flex; gap: 10px; align-items: center; padding: 8px 4px; border-top: 1px solid var(--line); }
+  .res:first-child { border-top: 0; }
+  .res img, .res .noimg { width: 38px; height: 54px; object-fit: cover; border-radius: 4px; background: var(--gray-soft); flex-shrink: 0; }
+  .res .main { flex: 1; min-width: 0; }
+  .res .t { font-weight: 650; font-size: 14px; line-height: 1.35; }
+  .res .m { font-size: 12.5px; color: var(--sub); }
+  .res .add { flex-shrink: 0; }
+  .res .add[data-in="1"] { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+  .manual { margin-top: 10px; font-size: 13px; color: var(--sub); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .cart { display: grid; gap: 10px; }
+  .ci { border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 10px; background: var(--card); }
+  .ci .top { display: flex; gap: 10px; align-items: flex-start; }
+  .ci .top img { width: 34px; height: 48px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+  .ci .top .main { flex: 1; min-width: 0; }
+  .ci .top .t { font-weight: 650; }
+  .ci .top .m { font-size: 12.5px; color: var(--sub); }
+  .ci .del { border: 0; background: transparent; color: var(--faint); font: inherit; font-size: 13px; cursor: pointer; padding: 2px 4px; }
+  .ci .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ci label { font-size: 12px; font-weight: 650; color: var(--sub); display: grid; gap: 4px; }
+  .ci label.off { opacity: .55; }
+  .ci input { padding: 8px 10px; }
+  .ci .seg button { flex: 1; min-width: 0; padding: 7px 8px; font-size: 13px; }
+  .ci .seg { flex-wrap: nowrap; }
+  .ci .seg button:disabled { opacity: .4; cursor: not-allowed; }
+  .ci .feeline { font-size: 12px; color: var(--accent); background: var(--accent-soft); border-radius: 8px; padding: 6px 9px; }
+  .ci .num { font-variant-numeric: tabular-nums; }
+  .ci .est { font-size: 13px; display: flex; justify-content: space-between; gap: 8px; padding: 0 2px; }
+  .ci .est b { font-variant-numeric: tabular-nums; }
+  .paybox { margin-top: 12px; border: 1px solid var(--line); border-radius: 12px; padding: 12px; display: grid; gap: 8px; background: var(--bg); }
+  .paybox .sum { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--sub); }
+  .paybox .sum b { font-size: 18px; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .paybox .seg button { flex: 1; padding: 8px; font-size: 14px; }
+  .paybox .hint { font-size: 12px; color: var(--faint); }
+  .acct { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; }
+  .acct .main { flex: 1; min-width: 0; font-size: 12px; color: var(--sub); }
+  .acct .main b { display: block; font-size: 15px; color: var(--ink); font-variant-numeric: tabular-nums; user-select: all; -webkit-user-select: all; }
+  input:disabled { background: var(--bg); color: var(--faint); }
+  .btn { border: 0; background: var(--accent); color: #fff; font: inherit; font-weight: 700; font-size: 15px; padding: 13px; border-radius: 12px; cursor: pointer; width: 100%; }
+  @media (prefers-color-scheme: dark) { .btn { color: #0f1a15; } }
+  .btn:disabled { opacity: .55; cursor: default; }
+  .msg { font-size: 13px; padding: 10px 12px; border-radius: 10px; display: none; }
+  .msg.ok { display: block; background: var(--accent-soft); color: var(--accent); }
+  .msg.err { display: block; background: var(--red-soft); color: var(--red); }
+  h2 { font-size: 15px; margin: 18px 2px 8px; }
+  footer { margin-top: 28px; text-align: center; font-size: 12px; color: var(--faint); }
+  footer a.ask { display: inline-block; margin-bottom: 10px; padding: 10px 18px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); color: var(--ink); text-decoration: none; font-weight: 650; font-size: 14px; }
+  .error { margin: 80px auto; max-width: 420px; text-align: center; padding: 0 16px; }
+  .error h1 { font-size: 20px; }
+  .error p { color: var(--sub); }
+</style>
+<script>window.google={script:{run:(function(){var s,f;var r={withSuccessHandler:function(x){s=x;return r},withFailureHandler:function(x){f=x;return r},
+searchBooks:function(k,q){setTimeout(function(){s({total:3,items:[{"title":"밤의 도서관을 걷는 법","sub":"","author":"윤서하","publisher":"달빛서가","listPrice":16800,"isbn":"9791100000011","cover":"","pubDate":"2025-03"},{"title":"밤의 문장들","sub":"잠들기 전 읽는 짧은 글","author":"이도윤 외","publisher":"작은숲","listPrice":14000,"isbn":"9791100000028","cover":"","pubDate":"2024-11"},{"title":"밤 산책자의 노트","sub":"","author":"한여름","publisher":"느린시","listPrice":12500,"isbn":"9791100000035","cover":"","pubDate":"2023-06"}].filter(function(b){return /^97/.test(q.replace(/-/g,''))?b.isbn===q.replace(/-/g,''):true})})},300)},
+submitRequest:function(k,fd){setTimeout(function(){(fd.items||[fd]).forEach(function(it){DATA.requests.unshift({at:'2026-09-27 10:00',t:it.title+(it.author?' ('+it.author+')':''),ty:it.type,q:+it.qty,mt:(it.type==='새책'?it.method:'직접 입고')+(it.type==='새책'&&it.method==='비북스 도매주문'?' · '+fd.pay:''),st:'대기',memo:''})});s(DATA.requests)},400)}};return r})()}};</script></head>
+<body>
+<div id="app"></div>
+<script>
+var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["B-00"]},"notice":"10월 정산은 11월 5일에 일괄 송금됩니다.\n추석 연휴(10/3~10/5)에는 입고를 받지 않아요.","contact":"https://pf.kakao.com/","allowRequest":true,"today":"2026-09-27","kpi":{"stockItems":8,"stockQty":17,"monthQty":5,"monthAmount":45000,"monthPayout":42450,"totalAmount":106800,"totalPayout":97500,"unpaid":70500},"items":[{"t":"고양이와 편지","pb":"","bc":"999999000017","ty":"중고","p":5000,"in":1,"s":0,"o":0,"l":1,"d":"2026-07-17","u":false,"ov":false,"hi":[["2026-07-17",1]],"hs":[]},{"t":"느리게 읽는 시","pb":"느린시","bc":"999999000016","ty":"새책","p":13000,"in":2,"s":1,"o":0,"l":1,"d":"2026-06-16","u":false,"ov":false,"hi":[["2026-06-16",2]],"hs":[["2026-09-11",1]]},{"t":"린넨 책갈피 (쪽빛)","pb":"","bc":"999999000014","ty":"굿즈","p":4000,"in":10,"s":6,"o":0,"l":4,"d":"2026-07-14","u":false,"ov":false,"hi":[["2026-07-14",10]],"hs":[["2026-07-19",3],["2026-08-23",2],["2026-09-20",1]]},{"t":"밤의 도서관을 걷는 법","pb":"달빛서가","bc":"999999000010","ty":"새책","p":16800,"in":3,"s":1,"o":0,"l":2,"d":"2026-06-10","u":false,"ov":false,"hi":[["2026-06-10",3]],"hs":[["2026-07-05",1]]},{"t":"북클립 세트","pb":"","bc":"999999000018","ty":"굿즈","p":6500,"in":6,"s":2,"o":0,"l":4,"d":"","u":true,"ov":false,"hi":[["",6]],"hs":[["2026-09-24",2]]},{"t":"여름 정원 일기","pb":"정원출판","bc":"999999000013","ty":"중고","p":6000,"in":1,"s":0,"o":0,"l":1,"d":"2026-06-13","u":false,"ov":false,"hi":[["2026-06-13",1]],"hs":[]},{"t":"오래된 지도책","pb":"","bc":"999999000012","ty":"중고","p":7000,"in":1,"s":1,"o":0,"l":0,"d":"2026-08-12","u":false,"ov":false,"hi":[["2026-08-12",1]],"hs":[["2026-08-02",1]]},{"t":"작은 서점의 사계절","pb":"작은숲","bc":"999999000011","ty":"새책","p":15000,"in":2,"s":1,"o":0,"l":1,"d":"2026-07-11","u":false,"ov":false,"hi":[["2026-07-11",2]],"hs":[["2026-09-03",1]]},{"t":"필사 노트 A5","pb":"","bc":"999999000015","ty":"굿즈","p":9000,"in":5,"s":2,"o":0,"l":3,"d":"2026-08-15","u":false,"ov":false,"hi":[["2026-08-15",5]],"hs":[["2026-08-15",2]]}],"sales":[{"d":"2026-09-24","t":"북클립 세트","ty":"굿즈","q":2,"p":6500,"po":11050,"m":"2026-09"},{"d":"2026-09-20","t":"린넨 책갈피 (쪽빛)","ty":"굿즈","q":1,"p":4000,"po":3400,"m":"2026-09"},{"d":"2026-09-11","t":"느리게 읽는 시","ty":"새책","q":1,"p":13000,"po":13000,"m":"2026-09"},{"d":"2026-09-03","t":"작은 서점의 사계절","ty":"새책","q":1,"p":15000,"po":15000,"m":"2026-09"},{"d":"2026-08-23","t":"린넨 책갈피 (쪽빛)","ty":"굿즈","q":2,"p":4000,"po":6800,"m":"2026-08"},{"d":"2026-08-15","t":"필사 노트 A5","ty":"굿즈","q":2,"p":9000,"po":15300,"m":"2026-08"},{"d":"2026-08-02","t":"오래된 지도책","ty":"중고","q":1,"p":7000,"po":5950,"m":"2026-08"},{"d":"2026-07-19","t":"린넨 책갈피 (쪽빛)","ty":"굿즈","q":3,"p":4000,"po":10200,"m":"2026-07"},{"d":"2026-07-05","t":"밤의 도서관을 걷는 법","ty":"새책","q":1,"p":16800,"po":16800,"m":"2026-07"}],"months":[{"month":"2026-09","count":4,"qty":5,"amount":45000,"payout":42450,"boxPayout":0,"boxAmount":0,"status":"집계 중","paidDate":"","paidAmount":0},{"month":"2026-08","count":3,"qty":5,"amount":33000,"payout":28050,"boxPayout":0,"boxAmount":0,"status":"정산 예정","paidDate":"","paidAmount":0},{"month":"2026-07","count":2,"qty":4,"amount":28800,"payout":27000,"boxPayout":0,"boxAmount":0,"status":"지급완료","paidDate":"2026-08-05","paidAmount":0}],"requests":[{"at":"2026-09-22 14:10","t":"바다를 건너는 문장들","ty":"새책","q":2,"mt":"","st":"대기","memo":""},{"at":"2026-09-02 11:30","t":"느리게 읽는 시","ty":"새책","q":2,"mt":"","st":"입고완료","memo":"9/4 입고"}],"unmatchedSales":0,"k":"preview","bookSearch":true,"payAccount":"○○은행 000-00-000000 비북스 (예시)"};
+</script>
+<script>
+(function () {
+  var D = DATA;
+  var app = document.getElementById('app');
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function won(n) { return (Math.round(n || 0)).toLocaleString('ko-KR') + '원'; }
+  function n(v) { return (Math.round(v || 0)).toLocaleString('ko-KR'); }
+  function md(d) { if (!d) return ''; var p = d.split('-'); return p.length >= 3 ? (+p[1]) + '.' + (+p[2]) : d; }
+  function monthLabel(m) { var p = m.split('-'); return p.length === 2 ? p[0] + '년 ' + (+p[1]) + '월' : m; }
+
+  if (D.error) {
+    app.innerHTML = '<div class="error"><div class="brand">B.BOOKS · 0.1평 서점</div><h1>서가 현황 페이지</h1><p>' + esc(D.error) + '</p></div>';
+    return;
+  }
+
+  var thisMonth = D.today.slice(0, 7);
+  var state = { tab: 'stock', q: '', type: '전체', showSold: false, month: (D.months[0] && D.months[0].month) || thisMonth, stockLimit: 40, salesLimit: 60 };
+  try { var saved = sessionStorage.getItem('bb-tab'); if (saved) state.tab = saved; } catch (e) {}
+
+  function statusBadge(s) {
+    var cls = /완료$/.test(s) ? 'b-green' : /예정$/.test(s) ? 'b-amber' : s === '확인 중' ? 'b-red' : 'b-gray';
+    return '<span class="badge ' + cls + '">' + esc(s) + '</span>';
+  }
+  function reqBadge(s) {
+    var cls = s === '입고완료' || s === '승인' ? 'b-green' : s === '반려' ? 'b-red' : 'b-amber';
+    return '<span class="badge ' + cls + '">' + esc(s) + '</span>';
+  }
+
+  var k = D.kpi;
+  var html = '';
+  html += '<div class="wrap"><header><div class="brand">B.BOOKS · 0.1평 서점</div>';
+  html += '<h1>' + esc(D.owner.name) + '</h1><div class="chips">';
+  (D.owner.shelves || []).forEach(function (s) { html += '<span class="chip">' + esc(s) + '</span>'; });
+  html += '<span class="updated">' + esc(D.today) + ' 기준</span></div></header>';
+  if (D.notice) html += '<div class="notice"><b>비북스 공지</b>' + esc(D.notice) + '</div>';
+  html += '<section class="kpis">' +
+    '<div class="kpi"><div class="label">지금 서가에</div><div class="value">' + n(k.stockQty) + '<small>개</small></div><div class="hint">' + n(k.stockItems) + '종</div></div>' +
+    '<div class="kpi"><div class="label">이번 달 판매</div><div class="value">' + n(k.monthQty) + '<small>개</small></div><div class="hint">' + won(k.monthAmount) + '</div></div>' +
+    '<div class="kpi primary"><div class="label">이번 달 정산 예정</div><div class="value">' + n(k.monthPayout) + '<small>원</small></div><div class="hint">월말 마감 후 지급</div></div>' +
+    '<div class="kpi"><div class="label">받을 정산금</div><div class="value">' + n(k.unpaid) + '<small>원</small></div><div class="hint">적립·송금 전 합계</div></div>' +
+    '</section>';
+  html += '<nav class="tabs" role="tablist">' +
+    tabBtn('stock', '재고') + tabBtn('sales', '판매 내역') + tabBtn('settle', '정산') + (D.allowRequest ? tabBtn('req', '입고 요청') : '') + '</nav>';
+  html += '<section class="panel" id="p-stock"></section><section class="panel" id="p-sales"></section>' +
+          '<section class="panel" id="p-settle"></section><section class="panel" id="p-req"></section>';
+  html += '<footer>' + (D.contact ? '<a class="ask" href="' + esc(D.contact) + '" target="_blank" rel="noopener">비북스에 문의하기</a><br>' : '') +
+          '이 페이지는 점주님 전용 링크입니다. 다른 분께 공유하지 말아 주세요.</footer></div>';
+  app.innerHTML = html;
+
+  function tabBtn(id, label) { return '<button role="tab" data-tab="' + id + '" aria-selected="false">' + label + '</button>'; }
+
+  // ---------- 재고 ----------
+  function renderStock() {
+    var el = document.getElementById('p-stock');
+    var types = ['전체'];
+    D.items.forEach(function (i) { if (i.ty && types.indexOf(i.ty) < 0) types.push(i.ty); });
+    var h = '<div class="toolbar"><input type="search" id="q" placeholder="제목으로 찾기" value="' + esc(state.q) + '">' +
+            (D.items.length ? '<button class="dl" type="button" id="dlStock">엑셀로 받기</button>' : '') + '</div>';
+    h += '<div class="toolbar"><div class="seg">';
+    types.forEach(function (t) { h += '<button data-type="' + esc(t) + '" aria-pressed="' + (state.type === t) + '">' + esc(t) + '</button>'; });
+    h += '</div><label class="check"><input type="checkbox" id="sold"' + (state.showSold ? ' checked' : '') + '> 품절 포함</label></div>';
+    var q = state.q.replace(/\s+/g, '').toLowerCase();
+    var list = D.items.filter(function (i) {
+      if (!state.showSold && i.l <= 0) return false;
+      if (state.type !== '전체' && i.ty !== state.type) return false;
+      if (q && String(i.t).replace(/\s+/g, '').toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    // 제목 가나다순 (앞의 [태그]·기호는 무시)
+    var sk = function (t) { return String(t).replace(/^\s*(\[[^\]]*\]\s*)+/, '').replace(/^[^0-9A-Za-z가-힣]+/, ''); };
+    list.sort(function (a, b) { return sk(a.t).localeCompare(sk(b.t), 'ko'); });
+    h += '<div class="summary"><span><b>' + list.length + '</b>종 · 남은 수량 <b>' + n(list.reduce(function (s, i) { return s + i.l; }, 0)) + '</b>개</span></div>';
+    if (!list.length) h += '<div class="list"><div class="empty">' + (D.items.length ? '조건에 맞는 상품이 없어요.' : '등록된 입고 기록이 아직 없어요.') + '</div></div>';
+    else {
+      h += '<div class="list">';
+      list.slice(0, state.stockLimit).forEach(function (i) {
+        var badges = '';
+        if (i.l <= 0) badges += '<span class="badge b-gray">품절</span>';
+        if (i.u) badges += '<span class="badge b-amber">입고 확인 전</span>';
+        if (i.ov) badges += '<span class="badge b-red">수량 확인 필요</span>';
+        var idx = D.items.indexOf(i);
+        h += '<div class="row item" data-i="' + idx + '" role="button" tabindex="0" aria-expanded="false"><div class="main"><div class="title">' + esc(i.t) + badges + '</div>' +
+             (i.pb ? '<div class="pub">' + esc(i.pb) + '</div>' : '') +
+             '<div class="meta">' + [i.ty, i.p ? won(i.p) : '', i.d ? md(i.d) + ' 입고' : ''].filter(Boolean).map(esc).join(' · ') + '</div></div>' +
+             '<div class="side"><div class="left' + (i.l <= 0 ? ' zero' : '') + '">' + n(i.l) + '<small>개</small></div>' +
+             '<div class="sub">입고 ' + n(i.in) + ' · 판매 ' + n(i.s) + (i.o ? ' · 회수 ' + n(i.o) : '') + '</div></div></div>' +
+             '<div class="hist" id="hist-' + idx + '" hidden>' + histHtml(i) + '</div>';
+      });
+      if (list.length > state.stockLimit) h += '<button class="more" id="stockMore">더 보기 (' + (list.length - state.stockLimit) + ')</button>';
+      h += '</div>';
+    }
+    if (D.unmatchedSales) h += '<p class="note">입고 목록과 이름이 달라 재고에서 빠지지 않은 판매가 ' + D.unmatchedSales + '건 있어요. 수량이 실제와 다르면 비북스에 알려 주세요.</p>';
+    el.innerHTML = h;
+    el.querySelectorAll('.row.item').forEach(function (row) {
+      var toggle = function () {
+        var box = document.getElementById('hist-' + row.getAttribute('data-i'));
+        box.hidden = !box.hidden;
+        row.setAttribute('aria-expanded', String(!box.hidden));
+      };
+      row.addEventListener('click', toggle);
+      row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+    });
+    var qi = document.getElementById('q');
+    qi.addEventListener('input', function () { state.q = qi.value; state.stockLimit = 40; renderStockKeepFocus(); });
+    el.querySelectorAll('[data-type]').forEach(function (b) { b.addEventListener('click', function () { state.type = b.getAttribute('data-type'); renderStock(); }); });
+    document.getElementById('sold').addEventListener('change', function (e) { state.showSold = e.target.checked; renderStock(); });
+    var more = document.getElementById('stockMore');
+    if (more) more.addEventListener('click', function () { state.stockLimit += 60; renderStock(); });
+    var dl = document.getElementById('dlStock');
+    if (dl) dl.addEventListener('click', function () { downloadStock(dl); });
+  }
+
+  // ---------- 현재고 엑셀 받기 (현재고가 있는 상품, 제목 가나다순) ----------
+  function stockRows() {
+    var sk = function (t) { return String(t).replace(/^\s*(\[[^\]]*\]\s*)+/, '').replace(/^[^0-9A-Za-z가-힣]+/, ''); };
+    var list = D.items.filter(function (i) { return i.l > 0; }).slice().sort(function (a, b) { return sk(a.t).localeCompare(sk(b.t), 'ko'); });
+    var head = ['제목', '출판사', '구분', '바코드', '판매가', '현재고', '입고 합계', '판매 합계', '회수·조정', '최근 입고일'];
+    return [head].concat(list.map(function (i) {
+      return [i.t, i.pb || '', i.ty || '', i.bc || '', i.p || '', i.l, i.in, i.s, i.o || 0, i.d || ''];
+    }));
+  }
+  function saveBlob(blob, name) {
+    var url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = name; a.rel = 'noopener';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  }
+  function downloadStock(btn) {
+    var rows = stockRows();
+    var base = (D.owner.name + '_현재고_' + D.today).replace(/[\\/:*?"<>|]/g, '');
+    var label = btn.textContent;
+    btn.disabled = true; btn.textContent = '만드는 중…';
+    var done = function () { btn.disabled = false; btn.textContent = label; };
+    var csv = function () {
+      var text = rows.map(function (r) { return r.map(function (v) { v = String(v == null ? '' : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(','); }).join('\r\n');
+      saveBlob(new Blob(['\ufeff' + text], { type: 'text/csv;charset=utf-8' }), base + '.csv');
+      done();
+    };
+    var build = function () {
+      try {
+        var ws = XLSX.utils.aoa_to_sheet(rows);
+        ws['!cols'] = [{ wch: 40 }, { wch: 16 }, { wch: 9 }, { wch: 15 }, { wch: 9 }, { wch: 7 }, { wch: 9 }, { wch: 9 }, { wch: 9 }, { wch: 12 }];
+        ws['!autofilter'] = { ref: 'A1:J' + rows.length };
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, '현재고');
+        var out = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+        saveBlob(new Blob([out], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), base + '.xlsx');
+        done();
+      } catch (e) { csv(); }
+    };
+    if (window.XLSX) return build();
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload = build;
+    s.onerror = csv;                                     // 라이브러리를 못 불러오면 CSV (엑셀에서 열림)
+    document.head.appendChild(s);
+  }
+  function renderStockKeepFocus() {
+    var pos = document.getElementById('q').selectionStart;
+    renderStock();
+    var qi = document.getElementById('q'); qi.focus(); try { qi.setSelectionRange(pos, pos); } catch (e) {}
+  }
+
+  function histHtml(i) {
+    var line = function (label, arr) {
+      if (!arr || !arr.length) return '<div class="hl"><span class="hk">' + label + '</span><span class="hv none">기록 없음</span></div>';
+      return '<div class="hl"><span class="hk">' + label + '</span><span class="hv">' +
+        arr.map(function (x) { return '<span class="chip2">' + esc(x[0] ? md(x[0]) : '날짜 없음') + ' · ' + n(x[1]) + '개</span>'; }).join('') + '</span></div>';
+    };
+    return line('입고 ' + (i.hi || []).length + '회', i.hi) + line('판매 ' + (i.hs || []).length + '회', i.hs) +
+      (i.o ? '<div class="hl"><span class="hk">회수·조정</span><span class="hv">' + n(i.o) + '개</span></div>' : '');
+  }
+
+  // ---------- 판매 ----------
+  function renderSales() {
+    var el = document.getElementById('p-sales');
+    var months = D.months.map(function (m) { return m.month; });
+    if (!months.length) { el.innerHTML = '<div class="list"><div class="empty">아직 판매 기록이 없어요.</div></div>'; return; }
+    var h = '<div class="toolbar"><select id="month">';
+    months.forEach(function (m) { h += '<option value="' + esc(m) + '"' + (m === state.month ? ' selected' : '') + '>' + esc(monthLabel(m)) + '</option>'; });
+    h += '</select></div>';
+    var list = D.sales.filter(function (s) { return (s.m || s.d.slice(0, 7)) === state.month; });
+    var mm = D.months.filter(function (m) { return m.month === state.month; })[0] || { qty: 0, amount: 0, payout: 0 };
+    h += '<div class="summary"><span>판매 <b>' + n(mm.qty) + '</b>개 · <b>' + won(mm.amount) + '</b></span><span>정산 <b>' + won(mm.payout) + '</b></span></div>';
+    h += '<div class="list">';
+    list.slice(0, state.salesLimit).forEach(function (s) {
+      h += '<div class="row"><div class="main"><div class="title">' + esc(s.t) + '</div>' +
+           '<div class="meta">' + esc(md(s.d)) + (s.ty ? ' · ' + esc(s.ty) : '') + ' · ' + n(s.q) + '개 × ' + won(s.p) + '</div></div>' +
+           '<div class="side"><div style="font-weight:700">' + won(s.po) + '</div><div class="sub">정산액</div></div></div>';
+    });
+    if (list.length > state.salesLimit) h += '<button class="more" id="salesMore">더 보기 (' + (list.length - state.salesLimit) + ')</button>';
+    h += '</div>';
+    el.innerHTML = h;
+    document.getElementById('month').addEventListener('change', function (e) { state.month = e.target.value; state.salesLimit = 60; renderSales(); });
+    var more = document.getElementById('salesMore');
+    if (more) more.addEventListener('click', function () { state.salesLimit += 100; renderSales(); });
+  }
+
+  // ---------- 정산 ----------
+  function renderSettle() {
+    var el = document.getElementById('p-settle');
+    if (!D.months.length) { el.innerHTML = '<div class="list"><div class="empty">아직 정산할 판매가 없어요.</div></div>'; return; }
+    var h = '<div class="list">';
+    D.months.forEach(function (m) {
+      h += '<div class="row"><div class="main"><div class="title">' + esc(monthLabel(m.month)) + statusBadge(m.status) + '</div>' +
+           '<div class="meta">판매 ' + n(m.qty) + '개 · ' + won(m.amount) + (m.paidDate ? ' · ' + esc(md(m.paidDate)) + ' 지급' : '') +
+           (m.paidAmount && m.paidAmount !== m.payout ? ' · 실제 지급 ' + won(m.paidAmount) : '') + '</div>' +
+           (m.boxPayout ? '<div class="split"><span>비박스 판매 정산 <b>' + won(m.boxPayout) + '</b> <em>행사 후 처리 완료</em></span>' +
+                          '<span>월말 일반 판매 정산 <b>' + won(m.payout - m.boxPayout) + '</b></span></div>' : '') + '</div>' +
+           '<div class="side"><div style="font-weight:750;font-size:17px">' + won(m.payout) + '</div><div class="sub">' + (m.boxPayout ? '합계' : '정산금액') + '</div></div></div>';
+    });
+    h += '</div><p class="note">매월 판매분은 월말에 마감해 정산합니다. 금액이 다르게 느껴지면 판매 내역 탭에서 월별 상세를 확인하고 비북스에 문의해 주세요.</p>';
+    el.innerHTML = h;
+  }
+
+  // ---------- 입고 요청 (여러 권 · 알라딘 검색) ----------
+  var FEE = {
+    '중고': '판매 시 수수료 15% · 판매가의 85%를 정산해 드려요.',
+    '굿즈': '판매 시 수수료 15% · 판매가의 85%를 정산해 드려요.',
+    '새책|직접': '판매 후 수수료 10% · 정가의 90%를 정산해 드려요.',
+    '새책|도매': '입고 시 정가의 ' + Math.round((D.wholesaleRate || 0.8) * 100) + '%에 구매해드리고, 판매되면 전액을 정산해드려요. (입고가 높은 일부 도서는 별도 안내)'
+  };
+  var cart = [], found = [], memo = '', pay = '';
+  var WR = D.wholesaleRate || 0.8;
+  try { var sc = JSON.parse(sessionStorage.getItem('bb-cart') || 'null'); if (sc && sc.k === D.k) { cart = sc.items || []; memo = sc.memo || ''; pay = sc.pay || ''; } } catch (e) {}
+  function saveCart() { try { sessionStorage.setItem('bb-cart', JSON.stringify({ k: D.k, items: cart, memo: memo, pay: pay })); } catch (e) {} }
+  var uid = 0;
+  function newItem(b) {
+    return { id: 'c' + Date.now().toString(36) + (uid++), src: b ? 'search' : 'manual', title: b ? b.title : '', author: b ? b.author : '',
+             publisher: b ? b.publisher : '', isbn: b ? b.isbn : '', cover: b ? b.cover : '', listPrice: b && b.listPrice ? b.listPrice : '',
+             type: '새책', method: '직접 입고', qty: 1, price: '' };
+  }
+  function isWs(c) { return c.type === '새책' && c.method === '비북스 도매주문'; }
+  function unitCost(c) { return Math.round((+c.listPrice || 0) * WR); }
+  function estText(c) { return +c.listPrice > 0 ? won(unitCost(c)) + ' × ' + (+c.qty || 0) + '개 = ' + won(unitCost(c) * (+c.qty || 0)) : '정가를 입력하면 계산돼요'; }
+  function wsTotal() { return cart.filter(isWs).reduce(function (s, c) { return s + unitCost(c) * (+c.qty || 0); }, 0); }
+  function updateTotals() {
+    var q = cart.reduce(function (s, x) { return s + (+x.qty || 0); }, 0);
+    document.getElementById('cartSum').textContent = cart.length ? cart.length + '종 · ' + q + '개' : '';
+    document.querySelectorAll('#cart .ci').forEach(function (box) {
+      var c = cart[+box.getAttribute('data-i')], e = box.querySelector('.est b');
+      if (c && e) e.textContent = estText(c);
+    });
+    var t = document.getElementById('wsTotal'); if (t) t.textContent = won(wsTotal());
+  }
+  function renderPay() {
+    var el = document.getElementById('payBox');
+    var n = cart.filter(isWs).length;
+    if (!n) { el.innerHTML = ''; return; }
+    el.innerHTML = '<div class="paybox"><div class="sum"><span>도매주문 ' + n + '종 · 예상 입고가 합계</span><b id="wsTotal">' + won(wsTotal()) + '</b></div>' +
+      '<div class="seg" id="paySeg"><button type="button" data-v="송금" aria-pressed="' + (pay === '송금') + '">송금</button>' +
+      '<button type="button" data-v="적립금 사용" aria-pressed="' + (pay === '적립금 사용') + '">적립금 사용</button></div>' +
+      (D.payAccount && pay !== '적립금 사용' ? '<div class="acct"><div class="main">비북스 송금 계좌<b id="acctNo">' + esc(D.payAccount) + '</b></div>' +
+        '<button class="btn2" type="button" id="acctCopy">복사</button></div>' : '') +
+      '<span class="hint">정가의 ' + Math.round(WR * 100) + '%로 계산한 예상 금액이에요. 입고가가 높은 일부 도서는 비북스에서 따로 안내드려요.</span></div>';
+    el.querySelectorAll('#paySeg button').forEach(function (b) {
+      b.addEventListener('click', function () { pay = b.getAttribute('data-v'); saveCart(); renderPay(); });
+    });
+    var cp = document.getElementById('acctCopy');
+    if (cp) cp.addEventListener('click', function () {
+      var text = D.payAccount.replace(/^\D*/, '').split(' ')[0];   // 계좌번호만
+      var done = function () { cp.textContent = '복사됨'; setTimeout(function () { cp.textContent = '복사'; }, 1500); };
+      var fallback = function () {
+        var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) { cp.textContent = '길게 눌러 복사'; }
+        ta.remove();
+      };
+      if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
+    });
+  }
+  function feeOf(it) { return it.type === '새책' ? FEE['새책|' + (it.method === '직접 입고' ? '직접' : '도매')] : FEE[it.type]; }
+
+  function renderReq() {
+    var el = document.getElementById('p-req');
+    if (!D.allowRequest) { el.innerHTML = ''; return; }
+    var h = '';
+    if (D.bookSearch) {
+      h += '<div class="box"><h3>책 찾기 <small>알라딘 검색</small></h3>' +
+        '<form class="sbar" id="sForm" autocomplete="off"><input type="search" id="sq" placeholder="제목, 저자 또는 ISBN" enterkeyhint="search">' +
+        '<button class="btn2 dark" type="submit" id="sBtn">검색</button></form>' +
+        '<div class="msg" id="sMsg"></div><div class="results" id="results"></div>' +
+        '<div class="manual"><span>검색에 없는 책·굿즈는</span><button class="btn2" type="button" id="addManual">직접 입력 추가</button></div></div>';
+    } else {
+      h += '<div class="box"><h3>신청할 상품 추가</h3><div class="manual" style="margin-top:0"><span>제목·가격을 직접 적어 주세요.</span>' +
+        '<button class="btn2" type="button" id="addManual">+ 상품 추가</button></div></div>';
+    }
+    h += '<div class="box"><h3>신청 목록 <small id="cartSum"></small></h3><div class="cart" id="cart"></div><div id="payBox"></div>' +
+      '<label style="display:grid;gap:5px;font-size:12.5px;font-weight:650;color:var(--sub);margin-top:12px">기타 메모' +
+      '<textarea id="memo" maxlength="300" placeholder="비북스에 남길 메모를 적어 주세요"></textarea></label>' +
+      '<div class="msg" id="reqMsg" style="margin-top:10px"></div><button class="btn" type="button" id="reqBtn" style="margin-top:10px">입고 요청 보내기</button></div>';
+    h += '<h2>보낸 요청</h2><div class="list" id="reqList"></div>';
+    el.innerHTML = h;
+    document.getElementById('memo').value = memo;
+    document.getElementById('memo').addEventListener('input', function (e) { memo = e.target.value; saveCart(); });
+    document.getElementById('addManual').addEventListener('click', function () {
+      cart.push(newItem(null)); saveCart(); renderCart();
+      var last = document.querySelector('#cart .ci:last-child input[data-f="title"]'); if (last) last.focus();
+    });
+    if (D.bookSearch) {
+      document.getElementById('sForm').addEventListener('submit', function (e) { e.preventDefault(); doSearch(); });
+    }
+    document.getElementById('reqBtn').addEventListener('click', submitCart);
+    renderCart(); renderReqList();
+  }
+
+  function doSearch() {
+    var q = document.getElementById('sq').value.trim(), msg = document.getElementById('sMsg'), btn = document.getElementById('sBtn');
+    if (!q) { msg.className = 'msg err'; msg.textContent = '제목, 저자 또는 ISBN을 입력해 주세요.'; return; }
+    btn.disabled = true; btn.textContent = '찾는 중…'; msg.className = 'msg';
+    google.script.run
+      .withSuccessHandler(function (r) {
+        btn.disabled = false; btn.textContent = '검색';
+        found = r.items || [];
+        if (!found.length) { msg.className = 'msg err'; msg.textContent = '검색 결과가 없어요. 다른 검색어로 찾거나 직접 입력으로 추가해 주세요.'; }
+        renderResults();
+      })
+      .withFailureHandler(function (er) {
+        btn.disabled = false; btn.textContent = '검색';
+        msg.className = 'msg err'; msg.textContent = (er && er.message) || '검색하지 못했어요. 잠시 후 다시 시도해 주세요.';
+      })
+      .searchBooks(D.k, q);
+  }
+  function inCart(b) { return cart.filter(function (c) { return c.isbn && c.isbn === b.isbn; })[0]; }
+  function renderResults() {
+    var el = document.getElementById('results');
+    el.innerHTML = found.map(function (b, i) {
+      var c = inCart(b);
+      return '<div class="res">' + (b.cover ? '<img src="' + esc(b.cover) + '" alt="" loading="lazy">' : '<span class="noimg"></span>') +
+        '<div class="main"><div class="t">' + esc(b.title) + '</div>' +
+        '<div class="m">' + [b.author, b.publisher, b.pubDate ? b.pubDate.replace('-', '.') : ''].filter(Boolean).map(esc).join(' · ') + '</div>' +
+        '<div class="m num">정가 ' + (b.listPrice ? won(b.listPrice) : '정보 없음') + '</div></div>' +
+        '<button class="btn2 add" type="button" data-r="' + i + '" data-in="' + (c ? 1 : 0) + '">' + (c ? '담김 ' + c.qty : '담기') + '</button></div>';
+    }).join('');
+    el.querySelectorAll('.add').forEach(function (bt) {
+      bt.addEventListener('click', function () {
+        var b = found[+bt.getAttribute('data-r')], c = inCart(b);
+        if (c) c.qty = Math.min(999, (+c.qty || 0) + 1); else cart.push(newItem(b));
+        saveCart(); renderResults(); renderCart();
+      });
+    });
+  }
+
+  function renderCart() {
+    var el = document.getElementById('cart');
+    var sum = document.getElementById('cartSum'), btn = document.getElementById('reqBtn');
+    btn.textContent = cart.length ? cart.length + '종 입고 요청 보내기' : '입고 요청 보내기';
+    btn.disabled = !cart.length;
+    renderPay();
+    if (!cart.length) {
+      sum.textContent = '';
+      el.innerHTML = '<div class="empty" style="padding:18px 8px">' + (D.bookSearch ? '위에서 책을 검색해 담거나, 직접 입력으로 추가해 주세요.' : '"+ 상품 추가"로 신청할 상품을 넣어 주세요.') + '</div>';
+      return;
+    }
+    el.innerHTML = cart.map(function (c, i) {
+      var isNew = c.type === '새책', manual = c.src === 'manual';
+      var head = manual
+        ? '<div class="main"><div class="grid" style="grid-template-columns:1fr">' +
+            '<label>제목 (저자)<input type="text" data-f="title" maxlength="120" value="' + esc(c.title) + '" placeholder="예) 작별하지 않는다 (한강)"></label>' +
+            '<label>출판사<input type="text" data-f="publisher" maxlength="60" value="' + esc(c.publisher) + '"></label></div></div>'
+        : (c.cover ? '<img src="' + esc(c.cover) + '" alt="">' : '') +
+          '<div class="main"><div class="t">' + esc(c.title) + '</div><div class="m">' + [c.author, c.publisher].filter(Boolean).map(esc).join(' · ') + '</div>' +
+          (c.isbn ? '<div class="m num">ISBN ' + esc(c.isbn) + '</div>' : '') + '</div>';
+      return '<div class="ci" data-i="' + i + '"><div class="top">' + head + '<button class="del" type="button" data-del="' + i + '" aria-label="빼기">빼기</button></div>' +
+        '<div class="seg" data-seg="type">' + ['새책', '중고', '굿즈'].map(function (t) { return '<button type="button" data-v="' + t + '" aria-pressed="' + (c.type === t) + '">' + t + '</button>'; }).join('') + '</div>' +
+        '<div class="seg" data-seg="method">' +
+          '<button type="button" data-v="직접 입고" aria-pressed="' + (c.method === '직접 입고') + '">1. 직접 입고</button>' +
+          '<button type="button" data-v="비북스 도매주문" aria-pressed="' + (c.method === '비북스 도매주문') + '"' + (isNew ? '' : ' disabled title="도매주문은 새책만 가능해요"') + '>2. 비북스 도매주문</button></div>' +
+        '<div class="grid" style="grid-template-columns:.8fr 1fr 1fr">' +
+          '<label>수량<input type="number" data-f="qty" min="1" max="999" inputmode="numeric" value="' + esc(c.qty) + '"></label>' +
+          '<label>정가<input type="number" data-f="listPrice" min="0" inputmode="numeric" placeholder="원" value="' + esc(c.listPrice) + '"></label>' +
+          '<label' + (isNew ? ' class="off"' : '') + '>판매 희망가<input type="number" data-f="price" min="0" inputmode="numeric" placeholder="' + (isNew ? '정가 판매' : '원') + '" value="' + (isNew ? '' : esc(c.price)) + '"' + (isNew ? ' disabled' : '') + '></label></div>' +
+        (isWs(c) ? '<div class="est"><span>예상 입고가</span><b>' + esc(estText(c)) + '</b></div>' : '') +
+        '<div class="feeline">' + esc(feeOf(c)) + '</div></div>';
+    }).join('');
+    updateTotals();
+    el.querySelectorAll('.ci').forEach(function (box) {
+      var c = cart[+box.getAttribute('data-i')];
+      box.querySelectorAll('input[data-f]').forEach(function (inp) {
+        inp.addEventListener('input', function () {
+          c[inp.getAttribute('data-f')] = inp.value; saveCart(); updateTotals();
+        });
+      });
+      box.querySelectorAll('[data-seg] button').forEach(function (b) {
+        b.addEventListener('click', function () {
+          if (b.disabled) return;
+          var k = b.parentNode.getAttribute('data-seg');
+          c[k] = b.getAttribute('data-v');
+          if (c.type !== '새책') c.method = '직접 입고';
+          saveCart(); renderCart();
+        });
+      });
+      box.querySelector('[data-del]').addEventListener('click', function () {
+        cart.splice(+box.getAttribute('data-i'), 1); saveCart(); renderCart();
+        if (document.getElementById('results')) renderResults();
+      });
+    });
+  }
+
+  function submitCart() {
+    var msg = document.getElementById('reqMsg'), btn = document.getElementById('reqBtn');
+    var err = '';
+    cart.some(function (c, i) {
+      var no = cart.length > 1 ? (i + 1) + '번째 상품: ' : '';
+      err = !String(c.title).trim() ? no + '제목을 입력해 주세요.'
+        : (c.type === '새책' && !(+c.listPrice > 0)) ? no + '새책은 정가를 입력해 주세요. 정가로 판매돼요.'
+        : (c.type !== '새책' && !(+c.price > 0)) ? no + '판매 희망가를 입력해 주세요.'
+        : !(+c.qty >= 1) ? no + '수량을 1개 이상 입력해 주세요.' : '';
+      return !!err;
+    });
+    if (!err && cart.some(isWs) && !pay) err = '도매주문 결제 방식(송금 / 적립금 사용)을 골라 주세요.';
+    if (err) { msg.className = 'msg err'; msg.textContent = err; return; }
+    var payload = { memo: memo, pay: pay, items: cart.map(function (c) {
+      return { type: c.type, method: c.method, title: c.title, author: c.author, publisher: c.publisher, isbn: c.isbn, qty: c.qty,
+               listPrice: c.listPrice, price: c.type === '새책' ? c.listPrice : c.price };
+    }) };
+    var n0 = cart.length;
+    btn.disabled = true; btn.textContent = '보내는 중…'; msg.className = 'msg';
+    google.script.run
+      .withSuccessHandler(function (reqs) {
+        D.requests = reqs; cart = []; memo = ''; pay = ''; saveCart();
+        document.getElementById('memo').value = '';
+        renderCart(); renderReqList(); if (document.getElementById('results')) renderResults();
+        msg.className = 'msg ok'; msg.textContent = n0 + '종 입고 요청을 보냈어요. 비북스에서 확인 후 입고를 도와드릴게요.';
+      })
+      .withFailureHandler(function (er) {
+        btn.disabled = false; btn.textContent = n0 + '종 입고 요청 보내기';
+        msg.className = 'msg err'; msg.textContent = (er && er.message) || '요청을 보내지 못했어요. 잠시 후 다시 시도해 주세요.';
+      })
+      .submitRequest(D.k, payload);
+  }
+  function renderReqList() {
+    var el = document.getElementById('reqList');
+    if (!D.requests.length) { el.innerHTML = '<div class="empty">보낸 요청이 없어요.</div>'; return; }
+    el.innerHTML = D.requests.map(function (r) {
+      return '<div class="row"><div class="main"><div class="title">' + esc(r.t) + reqBadge(r.st) + '</div>' +
+             '<div class="meta">' + [r.at, (r.ty || '') + ' ' + n(r.q) + '개', r.mt, r.memo].filter(Boolean).map(esc).join(' · ') + '</div></div></div>';
+    }).join('');
+  }
+
+  // ---------- 탭 ----------
+  var rendered = {};
+  var renderers = { stock: renderStock, sales: renderSales, settle: renderSettle, req: renderReq };
+  function show(tab) {
+    if (!renderers[tab] || (tab === 'req' && !D.allowRequest)) tab = 'stock';
+    state.tab = tab;
+    try { sessionStorage.setItem('bb-tab', tab); } catch (e) {}
+    document.querySelectorAll('nav.tabs button').forEach(function (b) { b.setAttribute('aria-selected', String(b.getAttribute('data-tab') === tab)); });
+    document.querySelectorAll('.panel').forEach(function (p) { p.classList.toggle('on', p.id === 'p-' + tab); });
+    if (!rendered[tab]) { renderers[tab](); rendered[tab] = true; }
+  }
+  document.querySelectorAll('nav.tabs button').forEach(function (b) { b.addEventListener('click', function () { show(b.getAttribute('data-tab')); }); });
+  show(state.tab);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="description" content="비북스 0.1평 서가 현황 페이지 사용 안내">
+<title>0.1평 서가 현황 페이지 안내</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+  /* 점주가 휴대폰으로 읽는 안내서 — 한 줄 흐름, 실제 화면 예시를 옆(좁으면 아래)에 둠. 색은 점주 페이지와 같은 계열 */
+  :root {
+    --bg: #f6f5f0; --paper: #ffffff; --ink: #1b241f; --muted: #5a6660; --faint: #87918b; --line: #e1ded5;
+    --accent: #2f5d50; --accent-ink: #ffffff; --accent-soft: #e2ece7; --amber: #95620f; --amber-soft: #f6ead3;
+    --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #131815; --paper: #1b211d; --ink: #e7ece9; --muted: #a3ada7; --faint: #78827c; --line: #2a332e;
+      --accent: #84c3ad; --accent-ink: #0f1a15; --accent-soft: #203830; --amber: #e2aa57; --amber-soft: #382c19; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #131815; --paper: #1b211d; --ink: #e7ece9; --muted: #a3ada7; --faint: #78827c; --line: #2a332e;
+    --accent: #84c3ad; --accent-ink: #0f1a15; --accent-soft: #203830; --amber: #e2aa57; --amber-soft: #382c19; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.7; word-break: keep-all; overflow-wrap: anywhere; }
+  .wrap { max-width: 980px; margin: 0 auto; padding-inline: 18px; padding-block: 36px 64px; }
+  h1, h2, h3 { text-wrap: balance; letter-spacing: -0.015em; line-height: 1.3; margin: 0; }
+  h1 { font-size: clamp(27px, 6vw, 38px); font-weight: 700; }
+  h2 { font-size: 22px; font-weight: 700; }
+  h3 { font-size: 17px; font-weight: 600; }
+  p { margin: 0; }
+  .eyebrow { font-size: 12.5px; font-weight: 600; letter-spacing: .08em; color: var(--muted); }
+  .lede { color: var(--muted); font-size: 17px; max-width: 58ch; }
+  header { display: grid; gap: 12px; }
+  nav.toc { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line);
+            margin: 26px -18px 0; padding: 8px 18px; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  nav.toc a { flex-shrink: 0; font-size: 14px; font-weight: 600; color: var(--muted); text-decoration: none; padding: 6px 10px; border-radius: 8px; }
+  nav.toc a:hover, nav.toc a:focus-visible { background: var(--paper); color: var(--ink); outline: none; }
+  section { padding-top: 40px; display: grid; gap: 14px; }
+  .sub { color: var(--muted); max-width: 60ch; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+
+  .change { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: stretch; }
+  .change .col { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 6px; align-content: start; }
+  .change .col b { font-size: 13px; color: var(--muted); }
+  .change .after { border-color: var(--accent); }
+  .change .after b { color: var(--accent); }
+  .change ul { margin: 0; padding-left: 18px; font-size: 15px; display: grid; gap: 4px; }
+  .change .arrow { align-self: center; color: var(--faint); font-size: 20px; }
+  @media (max-width: 620px) { .change { grid-template-columns: 1fr; } .change .arrow { justify-self: center; transform: rotate(90deg); } }
+
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 22px; align-items: start; }
+  .phone { position: sticky; top: 64px; border: 1px solid var(--line); border-radius: 26px; background: var(--paper); padding: 9px; display: grid; gap: 6px; }
+  .phone iframe { display: block; width: 100%; height: 640px; border: 0; border-radius: 18px; background: #f7f4ee; }
+  .phone .cap { font-size: 12px; color: var(--faint); text-align: center; }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } .phone { position: static; max-width: 380px; justify-self: center; width: 100%; } .phone iframe { height: 580px; } }
+
+  .tabs { display: grid; gap: 12px; }
+  .tab { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 8px; }
+  .tab .name { display: inline-flex; align-items: center; gap: 8px; }
+  .chip { font-size: 13px; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: var(--ink); color: var(--bg); }
+  .tab ul { margin: 0; padding-left: 18px; color: var(--ink); font-size: 15px; display: grid; gap: 4px; }
+  .tab ul li::marker { color: var(--faint); }
+  .badge { font-size: 12px; font-weight: 700; padding: 1px 7px; border-radius: 6px; background: var(--amber-soft); color: var(--amber); white-space: nowrap; }
+  .badge.g { background: var(--accent-soft); color: var(--accent); }
+
+  .kpi4 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .kpi4 div { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 14px; }
+  .kpi4 b { display: block; font-size: 13px; color: var(--muted); }
+
+  ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 10px; }
+  ol.steps li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; }
+  ol.steps li::before { content: counter(s); width: 26px; height: 26px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 13px; display: grid; place-items: center; margin-top: 2px; }
+
+  .table { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+  table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+  thead th { border-top: 0; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+  td.n { white-space: nowrap; font-weight: 600; }
+  .note { font-size: 14.5px; background: var(--amber-soft); border-radius: 12px; padding: 12px 14px; }
+  .note b { color: var(--amber); }
+
+  .faq { border-top: 1px solid var(--line); }
+  .faq details { border-bottom: 1px solid var(--line); padding: 12px 0; }
+  .faq summary { cursor: pointer; font-weight: 600; }
+  .faq summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  .faq p { color: var(--muted); margin-top: 6px; font-size: 15px; }
+
+  .msg { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .msg .bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px 10px 14px; border-bottom: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
+  .msg pre { margin: 0; padding: 16px; white-space: pre-wrap; font-family: var(--sans); font-size: 15px; line-height: 1.75; }
+  .copy { font: inherit; font-size: 13px; font-weight: 600; border: 1px solid var(--accent); color: var(--accent); background: transparent; border-radius: 8px; padding: 5px 12px; cursor: pointer; }
+  .copy.done { background: var(--accent); color: var(--accent-ink); }
+  .copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  footer { margin-top: 48px; color: var(--faint); font-size: 13px; }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">B.BOOKS · 0.1평 서점</div>
+    <h1>이제 서가 현황은 링크 하나로 봐요</h1>
+    <p class="lede">10월부터 점주님이 직접 채우시던 구글 시트 대신, 비북스가 입고·판매·정산을 한곳에서 기록합니다. 점주님은 따로 받으신 <b>개인 링크</b>에서 내 서가의 재고, 판매, 정산을 언제든 확인하고 입고 요청까지 할 수 있어요.</p>
+  </header>
+
+  <nav class="toc" aria-label="목차">
+    <a href="#change">무엇이 바뀌었나요</a><a href="#link">링크 쓰는 법</a><a href="#screen">화면 보는 법</a><a href="#request">입고 요청</a><a href="#settle">수수료·정산</a><a href="#faq">자주 묻는 것</a>
+  </nav>
+
+  <section id="change">
+    <h2>무엇이 바뀌었나요</h2>
+    <div class="change">
+      <div class="col"><b>9월까지</b><ul><li>점주님마다 구글 시트를 직접 관리</li><li>입고·판매를 각자 적고 계산</li><li>정산은 시트 메모로 확인</li></ul></div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="col after"><b>10월부터</b><ul><li>비북스가 통합 시트에 모두 기록</li><li>점주님은 개인 링크로 확인만</li><li>입고 요청도 링크에서 바로</li></ul></div>
+    </div>
+    <p class="sub">9월 30일까지의 입고·판매·정산 기록은 모두 옮겨 두었어요. 앞으로는 시트에 따로 적지 않으셔도 됩니다.</p>
+  </section>
+
+  <section id="link">
+    <h2>링크 쓰는 법</h2>
+    <ol class="steps">
+      <li><div><b>받으신 링크를 열어요.</b> 휴대폰·컴퓨터 어디서나 열려요. 로그인은 필요 없어요. 위쪽에 "Google Apps Script 사용자가 만들었습니다"라는 안내가 보이는데, 비북스가 만든 페이지라는 표시이니 그대로 쓰시면 됩니다.</div></li>
+      <li><div><b>휴대폰 홈 화면에 추가해 두면 편해요.</b><br>아이폰(사파리): 아래 공유 버튼 → <b>홈 화면에 추가</b><br>안드로이드(크롬): 오른쪽 위 ⋮ → <b>홈 화면에 추가</b></div></li>
+      <li><div><b>링크는 점주님 전용이에요.</b> 링크를 아는 사람은 누구나 내 서가 현황을 볼 수 있으니 다른 분께 공유하지 말아 주세요. 잃어버렸거나 공유된 것 같으면 비북스에 말씀해 주세요. 새 링크를 드리고 예전 링크는 막아 드려요.</div></li>
+    </ol>
+    <p class="note"><b>링크가 안 열릴 때</b> — 카카오톡이나 다른 앱 안에서 링크를 누르면 "이동 중" 화면에서 멈출 때가 있어요. 링크 주소를 길게 눌러 복사한 뒤, 사파리나 크롬 주소창에 붙여 넣어 열어 주세요. 주소 끝의 <b>?k=…</b> 부분까지 모두 있어야 열려요.</p>
+  </section>
+
+  <section id="screen">
+    <h2>화면 보는 법</h2>
+    <div class="two">
+      <div style="display:grid;gap:14px;min-width:0">
+        <p class="sub">맨 위 네 칸은 요약이에요.</p>
+        <div class="kpi4">
+          <div><b>지금 서가에</b>서가에 남아 있는 상품 수와 종류</div>
+          <div><b>이번 달 판매</b>이번 달 팔린 개수와 판매금액</div>
+          <div><b>이번 달 정산 예정</b>이번 달 판매분 중 점주님께 드릴 금액</div>
+          <div><b>받을 정산금</b>아직 적립·송금되지 않은 정산금 합계</div>
+        </div>
+        <p class="sub">아래 탭 네 개를 눌러 자세히 볼 수 있어요.</p>
+        <div class="tabs">
+          <div class="tab"><div class="name"><span class="chip">재고</span><h3>지금 서가에 있는 상품</h3></div>
+            <ul>
+              <li>제목 가나다순으로 보여요. 위 검색칸에 제목 일부를 적으면 바로 찾아져요.</li>
+              <li>새책·중고·굿즈 버튼으로 나눠 보고, <b>품절 포함</b>을 켜면 다 팔린 상품도 보여요.</li>
+              <li>상품을 누르면 <b>언제 몇 개 입고됐고 언제 팔렸는지</b> 이력이 펼쳐져요.</li>
+              <li><b>엑셀로 받기</b>를 누르면 현재고 목록을 엑셀 파일로 받을 수 있어요.</li>
+              <li><span class="badge">입고 확인 전</span> 입고 날짜가 아직 확인되지 않은 상품 · <span class="badge">수량 확인 필요</span> 기록상 판매가 입고보다 많은 상품이에요. 실제와 다르면 알려 주세요.</li>
+            </ul></div>
+          <div class="tab"><div class="name"><span class="chip">판매 내역</span><h3>월별로 팔린 상품</h3></div>
+            <ul><li>위에서 달을 고르면 그달 판매일, 수량, 판매가, 정산액이 보여요.</li><li>매장 판매는 보통 일주일 안에 반영돼요.</li></ul></div>
+          <div class="tab"><div class="name"><span class="chip">정산</span><h3>월별 정산 금액과 처리 상태</h3></div>
+            <ul>
+              <li>달마다 판매금액과 정산금액, 처리 상태가 보여요.</li>
+              <li><span class="badge">정산 예정</span> 월말 마감 후 처리할 금액 · <span class="badge g">적립완료</span> 비북스 적립금으로 넣음</li>
+              <li>송금을 따로 요청하신 경우 <span class="badge">송금 예정</span> → <span class="badge g">송금완료</span>로 보여요.</li>
+              <li>행사(비박스) 판매가 있던 달은 <b>비박스 판매 정산</b>(행사 후 바로 처리)과 <b>월말 일반 판매 정산</b>, 그리고 <b>합계</b>로 나눠 보여요.</li>
+            </ul></div>
+          <div class="tab"><div class="name"><span class="chip">입고 요청</span><h3>새로 입고할 책·굿즈 신청</h3></div>
+            <ul><li>아래 <a href="#request">입고 요청</a>에서 자세히 설명해요.</li></ul></div>
+        </div>
+      </div>
+      <div class="phone">
+        <iframe src="demo.html" title="점주 페이지 예시 화면 (가상 데이터)" loading="lazy"></iframe>
+        <div class="cap">예시 화면이에요 · 가상의 서가 데이터 · 눌러서 둘러보세요</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="request">
+    <h2>입고 요청하는 법</h2>
+    <p class="sub">여러 권을 한 번에 신청할 수 있어요. 비북스가 확인한 뒤 입고를 도와드리고, 처리 상태는 같은 탭 아래 "보낸 요청"에서 볼 수 있어요.</p>
+    <ol class="steps">
+      <li><div><b>책 찾기</b>에 제목, 저자 또는 ISBN을 적고 검색해요. 찾은 책의 <b>담기</b>를 누르면 정가·저자·출판사가 자동으로 채워져요. 같은 책을 한 번 더 누르면 수량이 늘어요.</div></li>
+      <li><div>검색에 없는 책이나 굿즈는 <b>직접 입력 추가</b>로 제목과 가격을 적어요.</div></li>
+      <li><div>신청 목록에서 책마다 <b>구분</b>(새책·중고·굿즈)과 <b>입고 방식</b>(직접 입고·비북스 도매주문), 수량을 골라요. 중고·굿즈는 <b>판매 희망가</b>를 적어 주세요. 새책은 정가로 판매해요.</div></li>
+      <li><div>도매주문이 있으면 예상 입고가 합계가 보이고, <b>송금</b> 또는 <b>적립금 사용</b> 중 결제 방식을 골라요. 송금을 고르면 비북스 계좌가 함께 보여요.</div></li>
+      <li><div>남길 말이 있으면 메모에 적고 <b>입고 요청 보내기</b>를 눌러요.</div></li>
+    </ol>
+    <p class="sub">보낸 요청의 상태는 <span class="badge">대기</span> → <span class="badge g">승인</span> 또는 <span class="badge g">입고완료</span>로 바뀌어요.</p>
+  </section>
+
+  <section id="settle">
+    <h2>수수료와 정산</h2>
+    <div class="table"><table>
+      <thead><tr><th>구분</th><th>판매가</th><th>수수료</th><th>점주님께 정산</th></tr></thead>
+      <tbody>
+        <tr><td class="n">새책 · 직접 입고</td><td>정가</td><td>판매 후 10%</td><td>정가의 90%</td></tr>
+        <tr><td class="n">새책 · 비북스 도매주문</td><td>정가</td><td>입고 시 정가의 80%에 구매</td><td>판매되면 판매가 전액<br><span style="color:var(--faint);font-size:13.5px">입고가가 높은 일부 도서는 별도 안내</span></td></tr>
+        <tr><td class="n">중고 · 굿즈</td><td>희망 판매가</td><td>판매 후 15%</td><td>판매가의 85%</td></tr>
+        <tr><td class="n">비박스(행사) 판매</td><td>행사 판매가</td><td>10%</td><td>판매가의 90% · 행사 후 바로 처리</td></tr>
+      </tbody>
+    </table></div>
+    <ol class="steps">
+      <li><div><b>매달 말일에 마감</b>하고, 다음 달 초에 정산해요.</div></li>
+      <li><div>정산금은 모두 <b>비북스 적립금</b>으로 넣어 드려요. 매장에서 책·굿즈를 살 때 쓰실 수 있어요.</div></li>
+      <li><div>처리되면 정산 탭 상태가 <span class="badge g">적립완료</span>로 바뀌어요.</div></li>
+      <li><div>적립금을 계좌로 받아야 할 때는 <b>그때그때 비북스에 송금을 요청</b>해 주세요. 자동으로 송금되지는 않아요.</div></li>
+    </ol>
+    <p class="note"><b>정산 안내 메일</b> — 이메일 주소를 알려 주시면 매달 정산 금액과 적립·송금 내역을 메일로도 보내 드려요.</p>
+  </section>
+
+  <section id="faq">
+    <h2>자주 묻는 것</h2>
+    <div class="faq">
+      <details><summary>예전에 시트에 적었던 기록은 어떻게 됐나요?</summary><p>9월 30일까지의 기록은 모두 이 페이지로 옮겼어요. 앞으로는 시트에 적지 않으셔도 됩니다.</p></details>
+      <details><summary>숫자가 제 기억과 달라요.</summary><p>옮기면서 이름이 다르게 적힌 판매나 빠진 입고 기록이 있을 수 있어요. 어떤 상품이 몇 개인지 알려 주시면 비북스가 확인해 바로 맞춰 드려요.</p></details>
+      <details><summary>오늘 팔린 책이 아직 안 보여요.</summary><p>매장 판매는 보통 일주일 안에 반영돼요. 반영된 뒤에도 안 보이면 알려 주세요.</p></details>
+      <details><summary>재고 수량이 실제 서가와 달라요.</summary><p>상품 이름과 실제 수량을 알려 주세요. 회수하거나 분실된 상품도 함께 말씀해 주시면 정리해 드려요.</p></details>
+      <details><summary>링크를 잃어버렸거나 다른 사람에게 보냈어요.</summary><p>비북스에 알려 주세요. 새 링크를 드리고 예전 링크는 막아 드려요.</p></details>
+      <details><summary>입고 요청을 보냈는데 취소하고 싶어요.</summary><p>비북스에 말씀해 주시면 요청을 정리해 드려요.</p></details>
+    </div>
+  </section>
+
+  <footer>비북스 0.1평 서점 · 궁금한 점은 비북스 카카오톡 채널로 편하게 물어봐 주세요.</footer>
+</div>
+
+
+</body>
+</html>
