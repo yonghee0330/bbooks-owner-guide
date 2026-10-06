@@ -231,6 +231,26 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
     h += '<div class="toolbar"><div class="seg">';
     types.forEach(function (t) { h += '<button data-type="' + esc(t) + '" aria-pressed="' + (state.type === t) + '">' + esc(t) + '</button>'; });
     h += '</div><label class="check"><input type="checkbox" id="sold"' + (state.showSold ? ' checked' : '') + '> 품절 포함</label></div>';
+    h += '<div id="stockBody"></div>';
+    el.innerHTML = h;
+    // 검색칸은 다시 그리지 않음 — 다시 그리면 휴대폰 한글 입력(삼성 키보드 ㅅ→ㅎ 등)이 끊김
+    var qi = document.getElementById('q');
+    qi.addEventListener('input', function () { state.q = qi.value; state.stockLimit = 40; renderStockList(); });
+    el.querySelectorAll('[data-type]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state.type = b.getAttribute('data-type');
+        el.querySelectorAll('[data-type]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        renderStockList();
+      });
+    });
+    document.getElementById('sold').addEventListener('change', function (e) { state.showSold = e.target.checked; renderStockList(); });
+    var dl = document.getElementById('dlStock');
+    if (dl) dl.addEventListener('click', function () { downloadStock(dl); });
+    renderStockList();
+  }
+
+  function renderStockList() {
+    var el = document.getElementById('stockBody'), h = '';
     var q = state.q.replace(/\s+/g, '').toLowerCase();
     var list = D.items.filter(function (i) {
       if (!state.showSold && i.l <= 0) return false;
@@ -241,7 +261,7 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
     // 제목 가나다순 (앞의 [태그]·기호는 무시)
     var sk = function (t) { return String(t).replace(/^\s*(\[[^\]]*\]\s*)+/, '').replace(/^[^0-9A-Za-z가-힣]+/, ''); };
     list.sort(function (a, b) { return sk(a.t).localeCompare(sk(b.t), 'ko'); });
-    h += '<div class="summary"><span><b>' + list.length + '</b>종 · 남은 수량 <b>' + n(list.reduce(function (s, i) { return s + i.l; }, 0)) + '</b>개</span></div>';
+    h = '<div class="summary"><span><b>' + list.length + '</b>종 · 남은 수량 <b>' + n(list.reduce(function (s, i) { return s + i.l; }, 0)) + '</b>개</span></div>';
     if (!list.length) h += '<div class="list"><div class="empty">' + (D.items.length ? '조건에 맞는 상품이 없어요.' : '등록된 입고 기록이 아직 없어요.') + '</div></div>';
     else {
       h += '<div class="list">';
@@ -272,14 +292,8 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
       row.addEventListener('click', toggle);
       row.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
     });
-    var qi = document.getElementById('q');
-    qi.addEventListener('input', function () { state.q = qi.value; state.stockLimit = 40; renderStockKeepFocus(); });
-    el.querySelectorAll('[data-type]').forEach(function (b) { b.addEventListener('click', function () { state.type = b.getAttribute('data-type'); renderStock(); }); });
-    document.getElementById('sold').addEventListener('change', function (e) { state.showSold = e.target.checked; renderStock(); });
     var more = document.getElementById('stockMore');
-    if (more) more.addEventListener('click', function () { state.stockLimit += 60; renderStock(); });
-    var dl = document.getElementById('dlStock');
-    if (dl) dl.addEventListener('click', function () { downloadStock(dl); });
+    if (more) more.addEventListener('click', function () { state.stockLimit += 60; renderStockList(); });
   }
 
   // ---------- 현재고 엑셀 받기 (현재고가 있는 상품, 제목 가나다순) ----------
@@ -326,11 +340,6 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
     s.onload = build;
     s.onerror = csv;                                     // 라이브러리를 못 불러오면 CSV (엑셀에서 열림)
     document.head.appendChild(s);
-  }
-  function renderStockKeepFocus() {
-    var pos = document.getElementById('q').selectionStart;
-    renderStock();
-    var qi = document.getElementById('q'); qi.focus(); try { qi.setSelectionRange(pos, pos); } catch (e) {}
   }
 
   function histHtml(i) {
