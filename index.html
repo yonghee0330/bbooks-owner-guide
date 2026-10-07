@@ -107,11 +107,11 @@
   <header>
     <div class="eyebrow">B.BOOKS · 0.1평 서점</div>
     <h1>이제 서가 현황은 링크 하나로 봐요</h1>
-    <p class="lede">10월부터 점주님이 직접 채우시던 구글 시트 대신, 비북스가 입고·판매·정산을 한곳에서 기록합니다. 점주님은 따로 받으신 <b>개인 링크</b>에서 내 서가의 재고, 판매, 정산을 언제든 확인하고 입고 요청까지 할 수 있어요.</p>
+    <p class="lede">10월부터 점주님이 직접 채우시던 구글 시트 대신, 비북스가 입고·판매·정산을 한곳에서 기록합니다. 점주님은 따로 받으신 <b>개인 링크</b>에서 내 서가의 재고, 판매, 정산을 언제든 확인하고 입고·출고·재고 수정 요청까지 할 수 있어요.</p>
   </header>
 
   <nav class="toc" aria-label="목차">
-    <a href="#change">무엇이 바뀌었나요</a><a href="#link">링크 쓰는 법</a><a href="#screen">화면 보는 법</a><a href="#request">입고 요청</a><a href="#settle">수수료·정산</a><a href="#faq">자주 묻는 것</a>
+    <a href="#change">무엇이 바뀌었나요</a><a href="#link">링크 쓰는 법</a><a href="#screen">화면 보는 법</a><a href="#request">입고 요청</a><a href="#stockreq">출고·재고 수정</a><a href="#settle">수수료·정산</a><a href="#faq">자주 묻는 것</a>
   </nav>
 
   <section id="change">
@@ -119,7 +119,7 @@
     <div class="change">
       <div class="col"><b>9월까지</b><ul><li>점주님마다 구글 시트를 직접 관리</li><li>입고·판매를 각자 적고 계산</li><li>정산은 시트 메모로 확인</li></ul></div>
       <div class="arrow" aria-hidden="true">→</div>
-      <div class="col after"><b>10월부터</b><ul><li>비북스가 통합 시트에 모두 기록</li><li>점주님은 개인 링크로 확인만</li><li>입고 요청도 링크에서 바로</li></ul></div>
+      <div class="col after"><b>10월부터</b><ul><li>비북스가 통합 시트에 모두 기록</li><li>점주님은 개인 링크로 확인만</li><li>입고·출고·재고 수정 요청도 링크에서 바로</li></ul></div>
     </div>
     <p class="sub">9월 30일까지의 입고·판매·정산 기록은 모두 옮겨 두었어요. 앞으로는 시트에 따로 적지 않으셔도 됩니다.</p>
   </section>
@@ -164,8 +164,8 @@
               <li>송금을 따로 요청하신 경우 <span class="badge">송금 예정</span> → <span class="badge g">송금완료</span>로 보여요.</li>
               <li>행사(비박스) 판매가 있던 달은 <b>비박스 판매 정산</b>(행사 후 바로 처리)과 <b>월말 일반 판매 정산</b>, 그리고 <b>합계</b>로 나눠 보여요.</li>
             </ul></div>
-          <div class="tab"><div class="name"><span class="chip">입고 요청</span><h3>새로 입고할 책·굿즈 신청</h3></div>
-            <ul><li>아래 <a href="#request">입고 요청</a>에서 자세히 설명해요.</li></ul></div>
+          <div class="tab"><div class="name"><span class="chip">요청</span><h3>입고·출고·재고 수정 신청</h3></div>
+            <ul><li>위쪽 버튼으로 <b>입고 요청 / 출고 요청 / 재고 수정</b>을 골라요.</li><li>아래 <a href="#request">입고 요청</a>, <a href="#stockreq">출고·재고 수정</a>에서 자세히 설명해요.</li></ul></div>
         </div>
       </div>
       <div class="phone">
@@ -186,6 +186,26 @@
       <li><div>남길 말이 있으면 메모에 적고 <b>입고 요청 보내기</b>를 눌러요.</div></li>
     </ol>
     <p class="sub">보낸 요청의 상태는 <span class="badge">대기</span> → <span class="badge g">승인</span> 또는 <span class="badge g">입고완료</span>로 바뀌어요.</p>
+  </section>
+
+  <section id="stockreq">
+    <h2>출고 요청 · 재고 수정하는 법</h2>
+    <p class="sub">서가에서 상품을 빼 가거나, 페이지의 수량이 실제 서가와 다를 때 쓰세요. <b>요청</b> 탭 위쪽에서 <b>출고 요청</b> 또는 <b>재고 수정</b>을 누르면 지금 서가에 있는 상품 목록이 나와요.</p>
+    <div class="table"><table>
+      <thead><tr><th>구분</th><th>이럴 때</th><th>수량칸에 적는 것</th></tr></thead>
+      <tbody>
+        <tr><td class="n">출고 요청</td><td>상품을 회수하거나 서가에서 빼고 싶을 때</td><td><b>빼 갈 개수</b> (예: 2개 회수 → 2)</td></tr>
+        <tr><td class="n">재고 수정</td><td>페이지 수량과 실제 서가 수량이 다를 때</td><td><b>실제로 서가에 있는 개수</b> (예: 페이지 5개, 실제 3개 → 3)</td></tr>
+      </tbody>
+    </table></div>
+    <ol class="steps">
+      <li><div>검색칸에 제목 일부를 적으면 목록이 좁혀져요.</div></li>
+      <li><div>바꿀 상품 옆 칸에 수량을 적어요. 여러 상품을 한 번에 적어도 돼요. 출고는 남은 수량보다 많이 적을 수 없어요.</div></li>
+      <li><div>사유가 있으면 메모에 적고 <b>요청 보내기</b>를 눌러요. (예: 굿즈 교체, 파손, 분실)</div></li>
+      <li><div>비북스가 확인한 뒤 재고에 반영해요. 반영되면 <b>재고</b> 탭 수량도 바뀌고, 상품 이력에 출고·수정 기록이 남아요.</div></li>
+    </ol>
+    <p class="sub">보낸 요청은 같은 화면 아래 "보낸 출고·재고 요청"에서 <span class="badge">대기</span> → <span class="badge g">반영완료</span>로 바뀌어요. <span class="badge">확인필요</span>가 보이면 비북스가 한 번 더 여쭤볼 거예요.</p>
+    <p class="note"><b>상품을 직접 가져가실 때</b> — 매장에서 회수하신 뒤에도 출고 요청을 꼭 남겨 주세요. 그래야 재고와 정산이 맞아요.</p>
   </section>
 
   <section id="settle">
@@ -214,9 +234,9 @@
       <details><summary>예전에 시트에 적었던 기록은 어떻게 됐나요?</summary><p>9월 30일까지의 기록은 모두 이 페이지로 옮겼어요. 앞으로는 시트에 적지 않으셔도 됩니다.</p></details>
       <details><summary>숫자가 제 기억과 달라요.</summary><p>옮기면서 이름이 다르게 적힌 판매나 빠진 입고 기록이 있을 수 있어요. 어떤 상품이 몇 개인지 알려 주시면 비북스가 확인해 바로 맞춰 드려요.</p></details>
       <details><summary>오늘 팔린 책이 아직 안 보여요.</summary><p>매장 판매는 보통 일주일 안에 반영돼요. 반영된 뒤에도 안 보이면 알려 주세요.</p></details>
-      <details><summary>재고 수량이 실제 서가와 달라요.</summary><p>상품 이름과 실제 수량을 알려 주세요. 회수하거나 분실된 상품도 함께 말씀해 주시면 정리해 드려요.</p></details>
+      <details><summary>재고 수량이 실제 서가와 달라요.</summary><p>요청 탭의 <b>재고 수정</b>에서 상품별 실제 수량을 적어 보내 주세요. 회수한 상품은 <b>출고 요청</b>으로 알려 주시면 돼요.</p></details>
       <details><summary>링크를 잃어버렸거나 다른 사람에게 보냈어요.</summary><p>비북스에 알려 주세요. 새 링크를 드리고 예전 링크는 막아 드려요.</p></details>
-      <details><summary>입고 요청을 보냈는데 취소하고 싶어요.</summary><p>비북스에 말씀해 주시면 요청을 정리해 드려요.</p></details>
+      <details><summary>입고·출고 요청을 보냈는데 취소하고 싶어요.</summary><p>비북스에 말씀해 주시면 요청을 정리해 드려요.</p></details>
     </div>
   </section>
 
