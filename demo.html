@@ -406,7 +406,8 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
     '중고': '판매 시 수수료 15% · 판매가의 85%를 정산해 드려요.',
     '굿즈': '판매 시 수수료 15% · 판매가의 85%를 정산해 드려요.',
     '새책|직접': '판매 후 수수료 10% · 정가의 90%를 정산해 드려요.',
-    '새책|도매': '입고 시 정가의 ' + Math.round((D.wholesaleRate || 0.8) * 100) + '%에 구매해드리고, 판매되면 전액을 정산해드려요. (입고가 높은 일부 도서는 별도 안내)'
+    '새책|도매': '입고 시 정가의 ' + Math.round((D.wholesaleRate || 0.8) * 100) + '%에 구매해드리고, 판매되면 전액을 정산해드려요. (입고가 높은 일부 도서는 별도 안내)',
+    '새책|개인': '점주님이 가져가실 책을 정가의 ' + Math.round((D.wholesaleRate || 0.8) * 100) + '%에 주문해 드려요. 서가에 진열하지 않고, 도착하면 바로 가져가시면 돼요. (서가 재고·정산에 들어가지 않아요)'
   };
   var cart = [], found = [], memo = '', pay = '';
   var WR = D.wholesaleRate || 0.8;
@@ -418,7 +419,7 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
              publisher: b ? b.publisher : '', isbn: b ? b.isbn : '', cover: b ? b.cover : '', listPrice: b && b.listPrice ? b.listPrice : '',
              type: '새책', method: '직접 입고', qty: 1, price: '' };
   }
-  function isWs(c) { return c.type === '새책' && c.method === '비북스 도매주문'; }
+  function isWs(c) { return c.type === '새책' && (c.method === '비북스 도매주문' || c.method === '개인 주문'); }   // 비북스가 주문하고 점주가 값을 내는 것
   function unitCost(c) { return Math.round((+c.listPrice || 0) * WR); }
   function estText(c) { return +c.listPrice > 0 ? won(unitCost(c)) + ' × ' + (+c.qty || 0) + '개 = ' + won(unitCost(c) * (+c.qty || 0)) : '정가를 입력하면 계산돼요'; }
   function wsTotal() { return cart.filter(isWs).reduce(function (s, c) { return s + unitCost(c) * (+c.qty || 0); }, 0); }
@@ -435,7 +436,7 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
     var el = document.getElementById('payBox');
     var n = cart.filter(isWs).length;
     if (!n) { el.innerHTML = ''; return; }
-    el.innerHTML = '<div class="paybox"><div class="sum"><span>도매주문 ' + n + '종 · 예상 입고가 합계</span><b id="wsTotal">' + won(wsTotal()) + '</b></div>' +
+    el.innerHTML = '<div class="paybox"><div class="sum"><span>비북스 주문 ' + n + '종 · 예상 결제 금액</span><b id="wsTotal">' + won(wsTotal()) + '</b></div>' +
       '<div class="seg" id="paySeg"><button type="button" data-v="송금" aria-pressed="' + (pay === '송금') + '">송금</button>' +
       '<button type="button" data-v="적립금 사용" aria-pressed="' + (pay === '적립금 사용') + '">적립금 사용</button></div>' +
       (D.payAccount && pay !== '적립금 사용' ? '<div class="acct"><div class="main">비북스 송금 계좌<b id="acctNo">' + esc(D.payAccount) + '</b></div>' +
@@ -456,7 +457,7 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
       if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, fallback); else fallback();
     });
   }
-  function feeOf(it) { return it.type === '새책' ? FEE['새책|' + (it.method === '직접 입고' ? '직접' : '도매')] : FEE[it.type]; }
+  function feeOf(it) { return it.type === '새책' ? FEE['새책|' + (it.method === '직접 입고' ? '직접' : it.method === '개인 주문' ? '개인' : '도매')] : FEE[it.type]; }
 
   var reqMode = 'in';
   try { reqMode = sessionStorage.getItem('bb-reqmode') || 'in'; } catch (e) {}
@@ -562,12 +563,13 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
         '<div class="seg" data-seg="type">' + ['새책', '중고', '굿즈'].map(function (t) { return '<button type="button" data-v="' + t + '" aria-pressed="' + (c.type === t) + '">' + t + '</button>'; }).join('') + '</div>' +
         '<div class="seg" data-seg="method">' +
           '<button type="button" data-v="직접 입고" aria-pressed="' + (c.method === '직접 입고') + '">1. 직접 입고</button>' +
-          '<button type="button" data-v="비북스 도매주문" aria-pressed="' + (c.method === '비북스 도매주문') + '"' + (isNew ? '' : ' disabled title="도매주문은 새책만 가능해요"') + '>2. 비북스 도매주문</button></div>' +
+          '<button type="button" data-v="비북스 도매주문" aria-pressed="' + (c.method === '비북스 도매주문') + '"' + (isNew ? '' : ' disabled title="도매주문은 새책만 가능해요"') + '>2. 도매주문</button>' +
+          '<button type="button" data-v="개인 주문" aria-pressed="' + (c.method === '개인 주문') + '"' + (isNew ? '' : ' disabled title="개인 주문은 새책만 가능해요"') + '>3. 개인 주문</button></div>' +
         '<div class="grid" style="grid-template-columns:.8fr 1fr 1fr">' +
           '<label>수량<input type="number" data-f="qty" min="1" max="999" inputmode="numeric" value="' + esc(c.qty) + '"></label>' +
           '<label>정가<input type="number" data-f="listPrice" min="0" inputmode="numeric" placeholder="원" value="' + esc(c.listPrice) + '"></label>' +
-          '<label' + (isNew ? ' class="off"' : '') + '>판매 희망가<input type="number" data-f="price" min="0" inputmode="numeric" placeholder="' + (isNew ? '정가 판매' : '원') + '" value="' + (isNew ? '' : esc(c.price)) + '"' + (isNew ? ' disabled' : '') + '></label></div>' +
-        (isWs(c) ? '<div class="est"><span>예상 입고가</span><b>' + esc(estText(c)) + '</b></div>' : '') +
+          '<label' + (isNew ? ' class="off"' : '') + '>' + (c.method === '개인 주문' ? '판매 안 함' : '판매 희망가') + '<input type="number" data-f="price" min="0" inputmode="numeric" placeholder="' + (c.method === '개인 주문' ? '-' : isNew ? '정가 판매' : '원') + '" value="' + (isNew ? '' : esc(c.price)) + '"' + (isNew ? ' disabled' : '') + '></label></div>' +
+        (isWs(c) ? '<div class="est"><span>' + (c.method === '개인 주문' ? '예상 결제 금액' : '예상 입고가') + '</span><b>' + esc(estText(c)) + '</b></div>' : '') +
         '<div class="feeline">' + esc(feeOf(c)) + '</div></div>';
     }).join('');
     updateTotals();
@@ -605,7 +607,7 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
         : !(+c.qty >= 1) ? no + '수량을 1개 이상 입력해 주세요.' : '';
       return !!err;
     });
-    if (!err && cart.some(isWs) && !pay) err = '도매주문 결제 방식(송금 / 적립금 사용)을 골라 주세요.';
+    if (!err && cart.some(isWs) && !pay) err = '비북스 주문 결제 방식(송금 / 적립금 사용)을 골라 주세요.';
     if (err) { msg.className = 'msg err'; msg.textContent = err; return; }
     var payload = { memo: memo, pay: pay, items: cart.map(function (c) {
       return { type: c.type, method: c.method, title: c.title, author: c.author, publisher: c.publisher, isbn: c.isbn, qty: c.qty,
@@ -714,7 +716,8 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
     var el = document.getElementById('reqList');
     if (!D.requests.length) { el.innerHTML = '<div class="empty">보낸 요청이 없어요.</div>'; return; }
     el.innerHTML = D.requests.map(function (r) {
-      return '<div class="row"><div class="main"><div class="title">' + esc(r.t) + reqBadge(r.st) + '</div>' +
+      var personal = /^개인 주문/.test(r.mt || '');                      // 개인 주문이 도착하면 '도착 · 수령'
+      return '<div class="row"><div class="main"><div class="title">' + esc(r.t) + (personal && r.st === '입고완료' ? reqBadge('입고완료').replace('입고완료', '도착 · 수령') : reqBadge(r.st)) + '</div>' +
              '<div class="meta">' + [r.at, (r.ty || '') + ' ' + n(r.q) + '개', r.mt, r.memo].filter(Boolean).map(esc).join(' · ') + '</div></div></div>';
     }).join('');
   }
