@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="description" content="비북스 0.1평 서점 새 점주님을 위한 시작 가이드 — 입고, 판매, 정산, 서가 관리">
+<title>0.1평 점주 시작 가이드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<style>
+  /* 점주가 휴대폰으로 읽는 안내서 — 한 줄 흐름, 실제 화면 예시를 옆(좁으면 아래)에 둠. 색은 점주 페이지와 같은 계열 */
+  :root {
+    --bg: #f6f5f0; --paper: #ffffff; --ink: #1b241f; --muted: #5a6660; --faint: #87918b; --line: #e1ded5;
+    --accent: #2f5d50; --accent-ink: #ffffff; --accent-soft: #e2ece7; --amber: #95620f; --amber-soft: #f6ead3;
+    --sans: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #131815; --paper: #1b211d; --ink: #e7ece9; --muted: #a3ada7; --faint: #78827c; --line: #2a332e;
+      --accent: #84c3ad; --accent-ink: #0f1a15; --accent-soft: #203830; --amber: #e2aa57; --amber-soft: #382c19; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #131815; --paper: #1b211d; --ink: #e7ece9; --muted: #a3ada7; --faint: #78827c; --line: #2a332e;
+    --accent: #84c3ad; --accent-ink: #0f1a15; --accent-soft: #203830; --amber: #e2aa57; --amber-soft: #382c19; color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 16px; line-height: 1.7; word-break: keep-all; overflow-wrap: anywhere; }
+  .wrap { max-width: 980px; margin: 0 auto; padding-inline: 18px; padding-block: 36px 64px; }
+  h1, h2, h3 { text-wrap: balance; letter-spacing: -0.015em; line-height: 1.3; margin: 0; }
+  h1 { font-size: clamp(27px, 6vw, 38px); font-weight: 700; }
+  h2 { font-size: 22px; font-weight: 700; }
+  h3 { font-size: 17px; font-weight: 600; }
+  p { margin: 0; }
+  .eyebrow { font-size: 12.5px; font-weight: 600; letter-spacing: .08em; color: var(--muted); }
+  .lede { color: var(--muted); font-size: 17px; max-width: 58ch; }
+  header { display: grid; gap: 12px; }
+  nav.toc { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line);
+            margin: 26px -18px 0; padding: 8px 18px; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+  nav.toc a { flex-shrink: 0; font-size: 14px; font-weight: 600; color: var(--muted); text-decoration: none; padding: 6px 10px; border-radius: 8px; }
+  nav.toc a:hover, nav.toc a:focus-visible { background: var(--paper); color: var(--ink); outline: none; }
+  section { padding-top: 40px; display: grid; gap: 14px; }
+  .sub { color: var(--muted); max-width: 60ch; }
+  a { color: var(--accent); text-underline-offset: 3px; }
+
+  .change { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: stretch; }
+  .change .col { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 6px; align-content: start; }
+  .change .col b { font-size: 13px; color: var(--muted); }
+  .change .after { border-color: var(--accent); }
+  .change .after b { color: var(--accent); }
+  .change ul { margin: 0; padding-left: 18px; font-size: 15px; display: grid; gap: 4px; }
+  .change .arrow { align-self: center; color: var(--faint); font-size: 20px; }
+  @media (max-width: 620px) { .change { grid-template-columns: 1fr; } .change .arrow { justify-self: center; transform: rotate(90deg); } }
+
+  .two { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 22px; align-items: start; }
+  .phone { position: sticky; top: 64px; border: 1px solid var(--line); border-radius: 26px; background: var(--paper); padding: 9px; display: grid; gap: 6px; }
+  .phone iframe { display: block; width: 100%; height: 640px; border: 0; border-radius: 18px; background: #f7f4ee; }
+  .phone .cap { font-size: 12px; color: var(--faint); text-align: center; }
+  @media (max-width: 860px) { .two { grid-template-columns: 1fr; } .phone { position: static; max-width: 380px; justify-self: center; width: 100%; } .phone iframe { height: 580px; } }
+
+  .tabs { display: grid; gap: 12px; }
+  .tab { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 8px; }
+  .tab .name { display: inline-flex; align-items: center; gap: 8px; }
+  .chip { font-size: 13px; font-weight: 700; padding: 2px 10px; border-radius: 999px; background: var(--ink); color: var(--bg); }
+  .tab ul { margin: 0; padding-left: 18px; color: var(--ink); font-size: 15px; display: grid; gap: 4px; }
+  .tab ul li::marker { color: var(--faint); }
+  .badge { font-size: 12px; font-weight: 700; padding: 1px 7px; border-radius: 6px; background: var(--amber-soft); color: var(--amber); white-space: nowrap; }
+  .badge.g { background: var(--accent-soft); color: var(--accent); }
+
+  .kpi4 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .kpi4 div { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 14px; }
+  .kpi4 b { display: block; font-size: 13px; color: var(--muted); }
+
+  ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 10px; }
+  ol.steps li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; }
+  ol.steps li::before { content: counter(s); width: 26px; height: 26px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 13px; display: grid; place-items: center; margin-top: 2px; }
+
+  .table { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+  table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+  thead th { border-top: 0; font-size: 12.5px; color: var(--muted); font-weight: 600; }
+  td.n { white-space: nowrap; font-weight: 600; }
+  .note { font-size: 14.5px; background: var(--amber-soft); border-radius: 12px; padding: 12px 14px; }
+  .note b { color: var(--amber); }
+
+  .faq { border-top: 1px solid var(--line); }
+  .faq details { border-bottom: 1px solid var(--line); padding: 12px 0; }
+  .faq summary { cursor: pointer; font-weight: 600; }
+  .faq summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  .faq p { color: var(--muted); margin-top: 6px; font-size: 15px; }
+
+  .msg { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .msg .bar { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 12px 10px 14px; border-bottom: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
+  .msg pre { margin: 0; padding: 16px; white-space: pre-wrap; font-family: var(--sans); font-size: 15px; line-height: 1.75; }
+  .copy { font: inherit; font-size: 13px; font-weight: 600; border: 1px solid var(--accent); color: var(--accent); background: transparent; border-radius: 8px; padding: 5px 12px; cursor: pointer; }
+  .copy.done { background: var(--accent); color: var(--accent-ink); }
+  .copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  footer { margin-top: 48px; color: var(--faint); font-size: 13px; }
+  @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+
+  /* 시작 가이드 전용 */
+  section { scroll-margin-top: 58px; }
+  .flow { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; }
+  .flow div { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 10px; font-size: 14px; display: grid; gap: 4px; align-content: start; }
+  .flow div b { font-size: 12px; color: var(--accent); letter-spacing: .04em; }
+  .flow div span { color: var(--muted); font-size: 13px; line-height: 1.5; }
+  @media (max-width: 860px) { .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .check { display: grid; gap: 10px; }
+  .check label { display: grid; grid-template-columns: 24px 1fr; gap: 10px; align-items: start; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 13px 14px; cursor: pointer; }
+  .check input { width: 20px; height: 20px; margin: 3px 0 0; accent-color: var(--accent); }
+  .check label:has(input:checked) { border-color: var(--accent); }
+  .check label:has(input:checked) .t { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--faint); }
+  .check .t { font-weight: 600; }
+  .check .d { color: var(--muted); font-size: 15px; display: block; font-weight: 400; text-decoration: none; }
+  .btn { display: inline-block; font-weight: 600; font-size: 14.5px; text-decoration: none; background: var(--accent); color: var(--accent-ink); border-radius: 10px; padding: 9px 14px; margin-top: 6px; }
+  .btn.line { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .cards3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .cards3 > div { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; display: grid; gap: 8px; align-content: start; }
+  .cards3 .k { font-size: 12.5px; font-weight: 700; color: var(--accent); }
+  .cards3 ul { margin: 0; padding-left: 18px; font-size: 14.5px; display: grid; gap: 3px; color: var(--muted); }
+  @media (max-width: 760px) { .cards3 { grid-template-columns: 1fr; } }
+  .ex { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: 15px; display: grid; gap: 4px; }
+  .ex .num { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .status { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 14px; }
+  .status .arr { color: var(--faint); }
+  .sp { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 760px) { .sp { grid-template-columns: 1fr; } }
+  .perk { background: var(--accent-soft); border-radius: 12px; padding: 12px 14px; font-size: 15px; }
+  .perk b { color: var(--accent); }
+  .links { display: flex; flex-wrap: wrap; gap: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">B.BOOKS · 0.1평 서점 · 새 점주님께</div>
+    <h1>0.1평 점주 시작 가이드</h1>
+    <p class="lede">비북스 0.1평 서점에 오신 걸 환영해요. 서가에 책을 들이고, 팔리고, 정산받기까지 점주님이 하실 일과, 비북스 공간에서 모임·대관·행사를 활용하는 방법까지 순서대로 정리했어요. 이 페이지만 따라 하시면 따로 묻지 않아도 시작할 수 있어요.</p>
+  </header>
+
+  <nav class="toc" aria-label="목차">
+    <a href="#flow">한눈에 보기</a><a href="#first">처음 할 일</a><a href="#stockin">입고하기</a><a href="#sales">판매</a><a href="#settle">정산</a><a href="#manage">서가 관리</a><a href="#space">공간 활용</a><a href="#mail">메일 알림</a><a href="#faq">자주 묻는 것</a>
+  </nav>
+
+  <section id="flow">
+    <h2>한눈에 보기</h2>
+    <p class="sub">점주님은 <b>개인 링크</b> 하나로 재고·판매·정산을 확인하고, 입고·출고를 요청해요. 기록은 비북스가 통합시트에 모두 남기니 따로 장부를 쓰지 않으셔도 돼요.</p>
+    <div class="flow">
+      <div><b>1. 입고 요청</b>링크에서 신청<span>책·굿즈를 무엇을 몇 개 둘지</span></div>
+      <div><b>2. 입고</b>비북스가 확인<span>매장에 가져오시거나 비북스가 주문</span></div>
+      <div><b>3. 진열·판매</b>매장 포스로 판매<span>손님은 비북스 계산대에서 결제</span></div>
+      <div><b>4. 판매 반영</b>매주 기록<span>점주 페이지에 판매가 쌓여요</span></div>
+      <div><b>5. 월말 마감</b>말일 기준<span>한 달 판매와 정산액 확정</span></div>
+      <div><b>6. 정산</b>다음 달 초<span>비북스 적립금으로 적립</span></div>
+    </div>
+  </section>
+
+  <section id="first">
+    <h2>처음 할 일</h2>
+    <p class="sub">위에서부터 하나씩 체크하며 진행하세요. 체크 표시는 이 휴대폰에만 저장돼요.</p>
+    <div class="check" id="check">
+      <label><input type="checkbox" id="c1"><span><span class="t">개인 링크 받기</span><span class="d">비북스가 점주님 전용 링크를 보내 드려요. 로그인 없이 열리고, 휴대폰 홈 화면에 추가해 두면 앱처럼 쓸 수 있어요.<br>아이폰(사파리): 공유 버튼 → <b>홈 화면에 추가</b> · 안드로이드(크롬): ⋮ → <b>홈 화면에 추가</b></span></span></label>
+      <label><input type="checkbox" id="c2"><span><span class="t">알림 메일 등록하기</span><span class="d">서점명·점주명·이메일만 적으면 끝이에요. 입고 진행, 출고 반영, 월 정산 소식을 메일로 받아요. 등록하면 확인 메일이 바로 가요.</span>
+        <a class="btn" href="https://script.google.com/macros/s/AKfycbxllxFNt4rbOgA8xXxDMGywOWpv9beYOFIxma7bP7lh1zqAQ1lROxUfYdMZfGLYnNcF/exec?view=email" target="_blank" rel="noopener">알림 메일 등록하러 가기</a></span></label>
+      <label><input type="checkbox" id="c3"><span><span class="t">첫 입고 요청 보내기</span><span class="d">개인 링크 → <b>요청</b> 탭 → <b>입고 요청</b>에서 서가에 둘 상품을 담아 보내요. 방법은 아래 <a href="#stockin">입고하기</a>에 있어요.</span></span></label>
+      <label><input type="checkbox" id="c4"><span><span class="t">상품 가져오기 (직접 입고일 때)</span><span class="d">요청이 <span class="badge g">승인</span>으로 바뀌면 매장에 상품을 가져와 주세요. 도매주문은 비북스가 주문하니 기다리시면 돼요.</span></span></label>
+      <label><input type="checkbox" id="c5"><span><span class="t">입고 확인하기</span><span class="d">요청이 <span class="badge g">입고완료</span>가 되면 <b>재고</b> 탭에 상품과 수량이 나타나요. 이때부터 판매가 시작돼요.</span></span></label>
+    </div>
+  </section>
+
+  <section id="stockin">
+    <h2>입고하기</h2>
+    <p class="sub">입고 방식은 세 가지예요. 상품마다 따로 고를 수 있어요.</p>
+    <div class="cards3">
+      <div><span class="k">1. 직접 입고</span><b>내 책·굿즈를 가져와 진열</b>
+        <ul><li>새책·중고·굿즈 모두 가능</li><li>새책은 정가로 판매, 판매 후 수수료 10%</li><li>중고·굿즈는 희망가로 판매, 판매 후 수수료 15%</li><li>입고할 때 내는 돈 없음</li></ul></div>
+      <div><span class="k">2. 도매주문</span><b>비북스가 새책을 주문해 진열</b>
+        <ul><li>새책만 가능</li><li>입고할 때 정가의 80%를 결제 (송금 또는 적립금)</li><li>팔리면 판매가 전액을 정산</li><li>입고가가 높은 일부 도서는 따로 안내</li></ul></div>
+      <div><span class="k">3. 개인 주문</span><b>내가 가져갈 책을 비북스가 주문</b>
+        <ul><li>새책만 가능</li><li>정가의 80%를 결제</li><li>서가에 진열하지 않아요</li><li>도착하면 매장에서 받아 가세요 (재고·정산 없음)</li></ul></div>
+    </div>
+
+    <h3 style="margin-top:10px">입고 요청 보내는 법</h3>
+    <ol class="steps">
+      <li><div><b>요청</b> 탭 → 위쪽 <b>입고 요청</b>을 눌러요.</div></li>
+      <li><div><b>책 찾기</b>에 제목·저자·ISBN을 적고 검색한 뒤 <b>담기</b>를 눌러요. 정가·저자·출판사가 자동으로 채워져요. 검색에 없는 책이나 굿즈는 <b>직접 입력 추가</b>로 넣어요.</div></li>
+      <li><div>상품마다 <b>구분</b>(새책·중고·굿즈), <b>입고 방식</b>(직접 입고·도매주문·개인 주문), <b>수량</b>을 골라요.</div></li>
+      <li><div>중고·굿즈는 <b>판매 희망가</b>를 적어요. 새책은 도서정가제에 따라 정가로 판매돼요.</div></li>
+      <li><div>도매주문·개인 주문이 있으면 <b>예상 결제 금액</b>이 보여요. <b>송금</b> 또는 <b>적립금 사용</b>을 고르세요. 송금을 고르면 비북스 계좌가 함께 보여요.</div></li>
+      <li><div>전할 말이 있으면 메모에 적고 <b>입고 요청 보내기</b>를 눌러요. 여러 상품을 한 번에 보낼 수 있어요.</div></li>
+    </ol>
+    <p class="sub" style="margin-top:6px">보낸 요청은 같은 화면 아래 "보낸 요청"에서 상태를 볼 수 있어요.</p>
+    <div class="status"><span class="badge">대기</span><span class="arr">→</span><span class="badge g">승인</span><span class="sub">(가져오시거나 주문 진행)</span><span class="arr">→</span><span class="badge g">입고완료</span><span class="sub">(재고에 반영)</span></div>
+    <div class="status"><span class="sub">개인 주문은</span><span class="badge g">승인</span><span class="arr">→</span><span class="badge g">도착 · 수령</span><span class="sub">· 진행하지 않는 요청은</span><span class="badge">반려</span><span class="sub">(사유는 메모로 안내)</span></div>
+    <p class="note"><b>입고 전에 알아 두세요</b> — 입고가 끝나면 비북스가 매장 포스에 상품을 등록해 판매를 시작해요. 같은 상품을 더 들일 때도 입고 요청으로 보내 주세요. 그래야 재고 수량이 맞아요.</p>
+  </section>
+
+  <section id="sales">
+    <h2>판매</h2>
+    <ol class="steps">
+      <li><div>손님은 비북스 계산대(토스 포스)에서 결제해요. 점주님이 매장에 계시지 않아도 판매돼요.</div></li>
+      <li><div>판매 기록은 비북스가 <b>매주</b> 점주 페이지에 반영해요. 오늘 팔린 책은 보통 일주일 안에 보여요.</div></li>
+      <li><div><b>판매 내역</b> 탭에서 달을 고르면 판매일, 수량, 판매가, 정산액을 볼 수 있어요. 팔린 만큼 <b>재고</b> 탭 수량도 줄어요.</div></li>
+      <li><div>손님이 할인이나 적립금을 써도 점주님 정산은 <b>할인 전 판매가</b>로 계산해요. 할인분은 비북스가 부담해요.</div></li>
+    </ol>
+    <p class="note"><b>비박스데이(행사) 판매</b> — 비북스 행사에서 판매한 금액은 수수료 10%를 빼고 행사가 끝나면 바로 정산해 드려요. 점주 페이지 정산 탭에 "비박스 판매 정산"으로 따로 보여요.</p>
+  </section>
+
+  <section id="settle">
+    <h2>정산</h2>
+    <div class="table"><table>
+      <thead><tr><th>구분</th><th>판매가</th><th>비북스 수수료</th><th>점주님 정산</th></tr></thead>
+      <tbody>
+        <tr><td class="n">새책 · 직접 입고</td><td>정가</td><td>판매 후 10%</td><td>정가의 90%</td></tr>
+        <tr><td class="n">새책 · 도매주문</td><td>정가</td><td>입고 때 정가의 80%에 구매</td><td>판매되면 판매가 전액</td></tr>
+        <tr><td class="n">중고 · 굿즈</td><td>희망 판매가</td><td>판매 후 15%</td><td>판매가의 85%</td></tr>
+        <tr><td class="n">비박스(행사) 판매</td><td>행사 판매가</td><td>10%</td><td>판매가의 90% · 행사 후 바로</td></tr>
+        <tr><td class="n">개인 주문</td><td colspan="3">판매하지 않으므로 정산 없음 (정가의 80%에 주문만)</td></tr>
+      </tbody>
+    </table></div>
+    <h3>예시로 보면</h3>
+    <div class="cards3">
+      <div class="ex"><b>정가 15,000원 새책 (직접 입고)</b><span>1권 판매 → 정산 <span class="num">13,500원</span></span></div>
+      <div class="ex"><b>정가 15,000원 새책 (도매주문)</b><span>입고 때 <span class="num">12,000원</span> 결제 → 판매되면 <span class="num">15,000원</span> 정산</span></div>
+      <div class="ex"><b>판매가 5,000원 굿즈</b><span>1개 판매 → 정산 <span class="num">4,250원</span></span></div>
+    </div>
+    <h3 style="margin-top:6px">정산 일정과 방법</h3>
+    <ol class="steps">
+      <li><div><b>매달 말일에 마감</b>하고, <b>다음 달 초</b>에 정산해요.</div></li>
+      <li><div>정산금은 기본으로 <b>비북스 적립금</b>으로 넣어 드려요. 매장에서 책·굿즈를 살 때나 도매주문 결제에 쓸 수 있어요.</div></li>
+      <li><div>계좌로 받고 싶을 때는 그때그때 <b>비북스에 송금을 요청</b>해 주세요. 자동으로 송금되지는 않아요.</div></li>
+      <li><div>처리되면 <b>정산</b> 탭 상태가 <span class="badge g">적립완료</span> 또는 <span class="badge g">송금완료</span>로 바뀌고, 알림 메일도 가요.</div></li>
+    </ol>
+  </section>
+
+  <section id="manage">
+    <h2>서가 관리</h2>
+    <div class="tabs">
+      <div class="tab"><div class="name"><span class="chip">재고</span><h3>지금 서가에 있는 상품</h3></div>
+        <ul><li>제목 일부를 검색칸에 적으면 바로 찾아져요. <b>품절 포함</b>을 켜면 다 팔린 상품도 보여요.</li>
+            <li>상품을 누르면 언제 몇 개 입고됐고 언제 팔렸는지 이력이 나와요.</li>
+            <li><b>엑셀로 받기</b>로 현재고 목록을 파일로 받을 수 있어요.</li></ul></div>
+      <div class="tab"><div class="name"><span class="chip">출고 요청</span><h3>서가에서 상품을 뺄 때</h3></div>
+        <ul><li><b>요청</b> 탭 → <b>출고 요청</b>에서 빼 갈 상품의 개수를 적어 보내요.</li>
+            <li>매장에서 직접 회수하셨어도 꼭 남겨 주세요. 그래야 재고와 정산이 맞아요.</li></ul></div>
+      <div class="tab"><div class="name"><span class="chip">재고 수정</span><h3>페이지 수량이 실제와 다를 때</h3></div>
+        <ul><li><b>요청</b> 탭 → <b>재고 수정</b>에서 서가에 <b>실제로 있는 개수</b>를 적어 보내요. (예: 페이지 5개, 실제 3개 → 3)</li>
+            <li>비북스가 확인하면 재고가 맞춰지고 상태가 <span class="badge g">반영완료</span>로 바뀌어요.</li></ul></div>
+    </div>
+    <p class="note"><b>가격을 바꾸고 싶을 때</b> — 중고·굿즈 판매가를 바꾸려면 비북스에 말씀해 주세요. 매장 포스 가격도 함께 바꿔야 해서 비북스가 처리해요.</p>
+  </section>
+
+  <section id="space">
+    <h2>비북스 공간 활용</h2>
+    <p class="sub">0.1평 서가 말고도 비북스 공간에서 모임에 참여하거나, 직접 모임을 열거나, 공간을 빌리거나, 행사에 셀러로 참여할 수 있어요. 모든 안내와 신청은 <a href="https://bbooks.co.kr/moim/" target="_blank" rel="noopener">비모임(b.moim) 페이지</a>에서 해요.</p>
+    <div class="links">
+      <a class="btn" href="https://bbooks.co.kr/moim/" target="_blank" rel="noopener">이번 달 모임 보기</a>
+      <a class="btn line" href="https://bbooks.co.kr/moim/open/" target="_blank" rel="noopener">모임 열기</a>
+      <a class="btn line" href="https://bbooks.co.kr/moim/space/" target="_blank" rel="noopener">공간 대관</a>
+      <a class="btn line" href="https://bbooks.co.kr/moim/my/" target="_blank" rel="noopener">내 신청 확인</a>
+    </div>
+
+    <h3 style="margin-top:8px">1. 모임·행사에 참여하기</h3>
+    <ol class="steps">
+      <li><div><a href="https://bbooks.co.kr/moim/" target="_blank" rel="noopener">비모임 페이지</a>에서 이번 달 모임과 행사를 봐요. 분야(독서·글쓰기·음악·차·어린이·언어 등), 이번 주·주말·평일 저녁으로 골라 볼 수 있고, <b>일정 달력</b>으로도 볼 수 있어요.</div></li>
+      <li><div>마음에 드는 모임을 눌러 신청서를 보내요. 신청하면 <b>신청번호</b>가 메일로 와요.</div></li>
+      <li><div>안내받은 계좌로 참가비를 입금하면 참가가 확정돼요.</div></li>
+      <li><div>신청 상태 확인과 취소 요청은 <a href="https://bbooks.co.kr/moim/my/" target="_blank" rel="noopener">내 신청</a>에서 신청번호와 휴대폰 번호로 해요. 신청번호를 잊으면 같은 화면에서 다시 받을 수 있어요.</div></li>
+      <li><div>새 모임을 놓치지 않으려면 비모임 페이지 아래 <b>캘린더 구독</b>을 눌러 휴대폰·구글 캘린더에 추가해 두세요. 새 일정이 자동으로 들어와요.</div></li>
+    </ol>
+    <p class="perk"><b>점주 혜택</b> — 비북스 작가와의 만남(b.talks)은 그동안 0.1평 점주님은 참가비 없이 참여해 왔어요. 행사마다 안내를 확인하고 신청해 주세요.</p>
+    <div class="table"><table>
+      <thead><tr><th>환불 규정</th><th>2일 전 취소</th><th>1일 전 취소</th><th>당일</th></tr></thead>
+      <tbody>
+        <tr><td class="n">재료 준비가 있는 모임</td><td>100% 환불</td><td>50% 환불</td><td>환불 불가</td></tr>
+        <tr><td class="n">재료 준비가 없는 모임</td><td colspan="2">1일 전까지 100% 환불</td><td>환불 불가</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3 style="margin-top:8px">2. 직접 모임 열기 (호스트)</h3>
+    <p class="sub">내 서가와 어울리는 독서모임, 글쓰기, 만들기, 클래스를 비북스에서 열 수 있어요. 비북스가 공간과 함께 <b>신청 받기, 입금 확인, 안내 메시지, 홍보 페이지</b>까지 준비해 드려요.</p>
+    <ol class="steps">
+      <li><div><b>개설 신청</b> — <a href="https://bbooks.co.kr/moim/open/" target="_blank" rel="noopener">모임 열기</a> 아래 신청서를 보내요. 모임 제목, 한 줄 소개, 분야, 대상, 상세 소개, 첫 회차 일정(여러 번이면 추가 회차), 진행 시간, <b>희망 공간</b>, 정원, 1인 참가비, 재료 준비 여부, 정기 여부(1회·매주·격주·매월)를 적어요.</div></li>
+      <li><div><b>일정·공간 협의</b> — 담당자가 연락해 날짜, 공간, 이용료를 정해요.</div></li>
+      <li><div><b>포스터 제출</b> — 아래 규격으로 직접 만들어 보내 주세요.</div></li>
+      <li><div><b>페이지 오픈</b> — 모임 페이지 공유 링크와, 신청 인원·입금 상태를 볼 수 있는 <b>호스트 전용 현황 링크</b>를 받아요. 비모임 월간 라인업, 인스타 카드, 매장 QR로 함께 홍보해요.</div></li>
+      <li><div><b>모임·정산</b> — 모임을 진행하면, 비북스가 받은 참가비를 정산해 드려요.</div></li>
+    </ol>
+    <p class="note"><b>대관은 따로 신청하지 않아도 돼요</b> — 모임을 열 때는 개설 신청서의 "희망 공간"에서 고르면 공간도 함께 잡아 드려요. 공간 이용료는 아래 대관 요금을 참고하고, 정확한 금액과 정산 방식은 일정 협의 때 담당자가 안내해 드려요.</p>
+    <div class="sp">
+      <div class="tab"><div class="name"><span class="chip">포스터 규격</span></div>
+        <ul><li>1080 × 1350px (세로 4:5, 인스타 피드와 같은 비율)</li><li>JPG 또는 PNG · 2MB 이하 · RGB</li><li>글자는 가장자리 64px 안쪽에</li><li>오른쪽 위 220 × 300px에는 "○자리 남음" 책갈피가 걸려요. 중요한 글자는 피해 주세요</li><li>제목은 크고 짧게 (1080px 기준 80px 이상)</li><li>날짜·가격·장소는 페이지에 글자로 따로 나와서 포스터에 없어도 돼요</li><li>파일 이름: 모임이름_년월 (예: daon_bookclub_2611.jpg)</li></ul></div>
+      <div class="tab"><div class="name"><span class="chip">호스트 팁</span></div>
+        <ul><li>모임 책을 내 서가에 입고해 두면 참가자가 그 자리에서 살 수 있어요</li><li>격주·매월처럼 같은 요일, 같은 자리에서 열면 모임이 단단해져요</li><li>재료를 준비하는 모임은 환불 규정이 달라지니 신청서에 꼭 표시해 주세요</li><li>최소 인원이 있으면 요청란에 적어 주세요 (예: 5명 미만이면 폐강)</li></ul></div>
+    </div>
+
+    <h3 style="margin-top:8px">3. 공간 빌리기 (대관)</h3>
+    <p class="sub">모임을 비모임으로 공개하지 않고 우리끼리 쓰고 싶을 때는 대관을 신청해요. 08:00–22:00 사이에 30분 단위로 고를 수 있고, 요금은 1시간 단위로 올려 계산해요. (예: 1시간 30분 → 2시간 요금)</p>
+    <div class="table"><table>
+      <thead><tr><th>공간</th><th>인원</th><th>요금</th><th>어울리는 쓰임</th></tr></thead>
+      <tbody>
+        <tr><td class="n">세미나실</td><td>최대 8인</td><td>1인 5,000원 (2시간 기준)</td><td>독서모임 · 정기 미팅 · 스터디 (문 닫히는 방)</td></tr>
+        <tr><td class="n">매장 모임 테이블</td><td>최대 8인</td><td>1인 5,000원 (2시간 기준)</td><td>독서모임 · 필사 · 만들기 · 티타임 (서가 사이 열린 자리)</td></tr>
+        <tr><td class="n">계단 좌석</td><td>최대 20인</td><td>시간당 50,000원</td><td>북토크 · 낭독회 · 작은 공연</td></tr>
+        <tr><td class="n">1인실</td><td>1인</td><td>2시간 10,000원 · 종일권(10–18시) 별도</td><td>글쓰기 · 작업 · 공부</td></tr>
+        <tr><td class="n">매장 전체 대관</td><td>최대 40인</td><td>시간당 100,000원</td><td>단체 모임 · 출판 기념회 · 워크숍</td></tr>
+      </tbody>
+    </table></div>
+    <p class="sub">책 열람, 와이파이, 간단한 음료·간식, 주차, 프린트·복합기, 모니터·프로젝터·앰프가 요금에 포함돼요. 모니터·프로젝터에 연결할 노트북만 챙겨 오세요.</p>
+    <ol class="steps">
+      <li><div><a href="https://bbooks.co.kr/moim/space/" target="_blank" rel="noopener">공간 대관</a>에서 공간 → 날짜 → 시간(시작 칸과 끝 칸)을 골라요. 점이 있는 날은 일부 시간이 이미 예약돼 있어요.</div></li>
+      <li><div>이름·휴대폰·이메일·인원·사용 목적을 적고 <b>대관 신청하기</b>를 눌러요. 접수 안내가 메일로 와요.</div></li>
+      <li><div>담당자가 일정과 정확한 금액을 안내해요.</div></li>
+      <li><div>입금이 확인되면 예약이 확정돼요. 취소는 내 신청이나 비북스 인스타그램 DM으로 요청해요.</div></li>
+    </ol>
+
+    <h3 style="margin-top:8px">4. 비박스데이 셀러로 참여하기</h3>
+    <p class="sub">비북스가 여는 북 & 플리마켓 <a href="https://box.bbooks.co.kr/" target="_blank" rel="noopener">비박스데이(b.box day)</a>에 내 부스를 열 수 있어요. 행사 공지가 나오면 신청하고, 안내에 따라 판매 물품을 등록해요. 행사 판매는 수수료 10%를 빼고 행사가 끝나면 바로 정산되고, 점주 페이지 정산 탭에 "비박스 판매 정산"으로 따로 보여요.</p>
+  </section>
+
+  <section id="mail">
+    <h2>메일 알림</h2>
+    <p class="sub">알림 메일을 등록하면 이런 소식을 받아요. 하루에 여러 건이면 한 통으로 묶어서 보내 드려요.</p>
+    <div class="table"><table>
+      <thead><tr><th>언제</th><th>받는 내용</th></tr></thead>
+      <tbody>
+        <tr><td class="n">입고 요청 승인</td><td>직접 입고는 "매장에 가져와 주세요", 주문은 "주문을 진행할게요"</td></tr>
+        <tr><td class="n">입고완료</td><td>서가 입고를 마쳤다는 안내 (개인 주문은 도착 안내)</td></tr>
+        <tr><td class="n">출고 · 재고 수정 반영</td><td>몇 개를 반영했는지</td></tr>
+        <tr><td class="n">월 정산 · 송금 완료</td><td>판매 수량·금액, 정산금액, 적립 또는 송금 내역</td></tr>
+      </tbody>
+    </table></div>
+    <a class="btn line" href="https://script.google.com/macros/s/AKfycbxllxFNt4rbOgA8xXxDMGywOWpv9beYOFIxma7bP7lh1zqAQ1lROxUfYdMZfGLYnNcF/exec?view=email" target="_blank" rel="noopener" style="justify-self:start">알림 메일 등록하기</a>
+  </section>
+
+  <section id="faq">
+    <h2>자주 묻는 것</h2>
+    <div class="faq">
+      <details><summary>링크가 열리지 않아요.</summary><p>카카오톡 안에서 누르면 "이동 중" 화면에서 멈출 때가 있어요. 링크를 길게 눌러 복사한 뒤 사파리나 크롬 주소창에 붙여 넣어 열어 주세요. 주소 끝의 <b>?k=…</b> 부분까지 모두 있어야 열려요.</p></details>
+      <details><summary>링크를 잃어버렸거나 다른 사람에게 보냈어요.</summary><p>비북스에 알려 주세요. 새 링크를 드리고 예전 링크는 막아 드려요. 링크를 아는 사람은 누구나 내 서가를 볼 수 있으니 다른 분께 공유하지 마세요.</p></details>
+      <details><summary>오늘 팔린 책이 아직 안 보여요.</summary><p>판매는 매주 반영돼요. 일주일이 지나도 안 보이면 비북스에 알려 주세요.</p></details>
+      <details><summary>재고 수량이 실제와 달라요.</summary><p>요청 탭의 <b>재고 수정</b>으로 실제 수량을 보내 주세요. 가져가신 상품은 <b>출고 요청</b>으로 알려 주세요.</p></details>
+      <details><summary>새책 가격을 정할 수 있나요?</summary><p>새책은 도서정가제에 따라 정가로 판매해요. 중고와 굿즈는 입고 요청 때 적으신 판매 희망가로 판매해요.</p></details>
+      <details><summary>도매주문 결제는 언제, 어떻게 하나요?</summary><p>입고 요청을 보낼 때 송금 또는 적립금 사용을 골라요. 송금을 고르면 요청 화면에 비북스 계좌가 보여요. 입고가가 높은 일부 도서는 비북스가 따로 안내해 드려요.</p></details>
+      <details><summary>정산금을 계좌로 받고 싶어요.</summary><p>기본은 적립금이에요. 계좌로 받고 싶을 때마다 비북스에 송금을 요청해 주세요.</p></details>
+      <details><summary>모임을 열 때 대관도 따로 신청해야 하나요?</summary><p>아니요. 모임 열기 신청서의 "희망 공간"에서 고르면 공간도 함께 잡아 드려요. 대관은 비모임으로 공개하지 않는 우리끼리 모임에 쓰는 신청이에요.</p></details>
+      <details><summary>내가 연 모임의 신청 현황은 어디서 보나요?</summary><p>모임 페이지가 열릴 때 받는 호스트 전용 현황 링크에서 신청 인원과 입금 상태를 언제든 볼 수 있어요. 링크는 다른 분께 공유하지 마세요.</p></details>
+      <details><summary>입고 요청을 취소하고 싶어요.</summary><p>비북스에 말씀해 주시면 요청을 정리해 드려요.</p></details>
+    </div>
+  </section>
+
+  <section>
+    <h2>더 보기</h2>
+    <p class="sub">점주 페이지의 탭별 화면 설명과 실제 화면 예시는 <a href="./">서가 현황 페이지 안내</a>에서, 예시 화면만 따로 보려면 <a href="demo.html">예시 점주 페이지</a>에서 볼 수 있어요.</p>
+  </section>
+
+  <footer>비북스 0.1평 서점 · 궁금한 점은 비북스 카카오톡 채널로 편하게 물어봐 주세요.</footer>
+</div>
+<script>
+  (function () {
+    var boxes = document.querySelectorAll('#check input[type=checkbox]');
+    var saved = {};
+    try { saved = JSON.parse(localStorage.getItem('bb-start-check') || '{}') || {}; } catch (e) {}
+    boxes.forEach(function (b) {
+      b.checked = !!saved[b.id];
+      b.addEventListener('change', function () {
+        saved[b.id] = b.checked;
+        try { localStorage.setItem('bb-start-check', JSON.stringify(saved)); } catch (e) {}
+      });
+    });
+  })();
+</script>
+</body>
+</html>
