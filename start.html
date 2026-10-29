@@ -150,6 +150,16 @@
   .closing { background: var(--accent); color: var(--accent-ink); border-radius: 16px; padding: 22px 20px; display: grid; gap: 10px; }
   .closing h3 { font-size: 20px; }
   .closing p { opacity: .92; }
+  .about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 18px; align-items: start; }
+  .about .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .about .facts div { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 14px; color: var(--muted); }
+  .about .facts b { display: block; color: var(--ink); font-size: 15px; }
+  .chips2 { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips2 span { font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); }
+  .site { border: 1px solid var(--line); border-radius: 16px; background: var(--paper); padding: 8px; display: grid; gap: 6px; }
+  .site iframe { display: block; width: 100%; height: 520px; border: 0; border-radius: 10px; background: #fff; }
+  .site .cap { font-size: 12px; color: var(--faint); text-align: center; }
+  @media (max-width: 860px) { .about { grid-template-columns: 1fr; } .site iframe { height: 460px; } }
 </style>
 </head>
 <body>
@@ -166,8 +176,30 @@
   </header>
 
   <nav class="toc" aria-label="목차">
-    <a href="#part1">1. 서가 이용</a><a href="#first">처음 할 일</a><a href="#stockin">입고</a><a href="#sales">판매</a><a href="#settle">정산</a><a href="#manage">서가 관리</a><a href="#part2">2. 비북스 활용</a><a href="#part3">3. 협업</a><a href="#faq">자주 묻는 것</a>
+    <a href="#about">비북스 소개</a><a href="#part1">1. 서가 이용</a><a href="#first">처음 할 일</a><a href="#stockin">입고</a><a href="#sales">판매</a><a href="#settle">정산</a><a href="#manage">서가 관리</a><a href="#part2">2. 비북스 활용</a><a href="#part3">3. 협업</a><a href="#faq">자주 묻는 것</a>
   </nav>
+
+  <section id="about">
+    <h2>먼저, 비북스는 어떤 곳인가요</h2>
+    <div class="about">
+      <div style="display:grid;gap:14px;min-width:0">
+        <p class="sub">비북스는 부천 원미동, 원미구청 맞은편 지하에 있는 <b>0.1평 공유서점</b>이에요. 서가 한 칸씩을 나눠 가진 점주들이 저마다의 취향으로 책을 고르고, 세상에서 가장 작은 서점들이 모여 하나의 동네책방이 됐어요. 2026년 6월, 104칸 모두 주인을 찾았어요.</p>
+        <div class="facts">
+          <div><b>로컬</b>『원미동 사람들』의 거리에 있는 동네책방</div>
+          <div><b>큐레이션</b>104칸, 칸마다 다른 주인과 취향</div>
+          <div><b>문화 공간</b>모임 · 북토크 · 밤샘 독서 · 마켓 · 대관</div>
+          <div><b>네트워크</b>점주와 작가, 이웃과 책방을 잇는 연결</div>
+        </div>
+        <p class="sub">비북스에서 열리는 프로그램은 대부분 점주님들에게서 시작돼요. 점주님도 참여하고, 직접 열 수 있어요.</p>
+        <div class="chips2"><span>비모임</span><span>비톡스 · 작가와의 만남</span><span>밤밀온 · 밤샘 독서</span><span>원미동 사람들 독서클럽</span><span>비보이스</span><span>비박스 · 북 &amp; 플리마켓</span><span>공간 대관</span></div>
+        <a class="btn" href="https://bbooks.co.kr/" target="_blank" rel="noopener" style="justify-self:start">비북스 홈페이지 둘러보기</a>
+      </div>
+      <div class="site">
+        <iframe src="https://bbooks.co.kr/" title="비북스 홈페이지 (bbooks.co.kr)" loading="lazy"></iframe>
+        <div class="cap">bbooks.co.kr · 안에서 스크롤해 보세요 · 크게 보려면 위 버튼을 눌러 주세요</div>
+      </div>
+    </div>
+  </section>
 
   <div class="part" id="part1"><span class="no">PART 1</span><h2>점주 서가 이용 가이드</h2><p class="sub">내 0.1평 서가에 상품을 들이고, 팔고, 정산받고, 관리하는 방법이에요.</p></div>
 
@@ -386,9 +418,12 @@
             <li>강연·북토크·워크숍 제안도 언제든 환영이에요</li></ul></div>
       <div><span class="k">4. 연결의 힘</span><h3>모임 열기 · 알리기</h3>
         <p>점주님이 여는 모임 하나, 공유한 게시물 하나가 비북스에 새로운 손님을 데려와요.</p>
-        <ul><li>내 서가와 어울리는 모임을 열어 보세요 (<a href="#space">PART 2</a>)</li>
+        <ul><li><b>0.1평 점주 SNS 연결 페이지</b>에서 다른 점주님들을 팔로우하고, 좋아요·댓글·공유로 서로 응원해요</li>
+            <li>내 SNS가 아직 없으면 비북스에 알려 주세요. 페이지에 추가해 드려요</li>
+            <li>내 서가와 어울리는 모임을 열어 보세요 (<a href="#space">PART 2</a>)</li>
             <li>비모임·행사 소식을 SNS와 지인에게 나눠 주세요</li>
-            <li>비북스 인스타그램 @b_books2026을 태그해 주시면 함께 알려요</li></ul></div>
+            <li>비북스 인스타그램 @b_books2026을 태그해 주시면 함께 알려요</li></ul>
+        <a class="btn" href="https://bbooks.co.kr/stores.html" target="_blank" rel="noopener" style="justify-self:start">점주 SNS 연결 페이지 열기</a></div>
     </div>
     <div class="closing">
       <h3>비북스가 단단히 뿌리내릴 수 있도록</h3>
