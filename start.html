@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex">
-<meta name="description" content="비북스 0.1평 서점 새 점주님을 위한 시작 가이드 — 입고, 판매, 정산, 서가 관리">
+<meta name="description" content="비북스 0.1평 서점 새 점주님을 위한 시작 가이드 — 서가 이용, 비북스 활용, 협업">
 <title>0.1평 점주 시작 가이드</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -130,6 +130,26 @@
   .perk { background: var(--accent-soft); border-radius: 12px; padding: 12px 14px; font-size: 15px; }
   .perk b { color: var(--accent); }
   .links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .part { margin-top: 56px; padding: 22px 0 4px; border-top: 2px solid var(--ink); display: grid; gap: 8px; scroll-margin-top: 58px; }
+  .part .no { font-size: 13px; font-weight: 700; letter-spacing: .1em; color: var(--accent); }
+  .part h2 { font-size: 26px; }
+  .parts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
+  .parts a { display: grid; gap: 4px; background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; text-decoration: none; color: var(--ink); }
+  .parts a:hover, .parts a:focus-visible { border-color: var(--accent); outline: none; }
+  .parts .no { font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: .08em; }
+  .parts b { font-size: 16.5px; }
+  .parts span { font-size: 14px; color: var(--muted); }
+  @media (max-width: 760px) { .parts { grid-template-columns: 1fr; } }
+  .ways { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .ways > div { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 16px; display: grid; gap: 8px; align-content: start; }
+  .ways .k { font-size: 12.5px; font-weight: 700; color: var(--accent); }
+  .ways h3 { font-size: 17.5px; }
+  .ways p { color: var(--muted); font-size: 15px; }
+  .ways ul { margin: 0; padding-left: 18px; font-size: 15px; display: grid; gap: 4px; }
+  @media (max-width: 760px) { .ways { grid-template-columns: 1fr; } }
+  .closing { background: var(--accent); color: var(--accent-ink); border-radius: 16px; padding: 22px 20px; display: grid; gap: 10px; }
+  .closing h3 { font-size: 20px; }
+  .closing p { opacity: .92; }
 </style>
 </head>
 <body>
@@ -137,12 +157,19 @@
   <header>
     <div class="eyebrow">B.BOOKS · 0.1평 서점 · 새 점주님께</div>
     <h1>0.1평 점주 시작 가이드</h1>
-    <p class="lede">비북스 0.1평 서점에 오신 걸 환영해요. 서가에 책을 들이고, 팔리고, 정산받기까지 점주님이 하실 일과, 비북스 공간에서 모임·대관·행사를 활용하는 방법까지 순서대로 정리했어요. 이 페이지만 따라 하시면 따로 묻지 않아도 시작할 수 있어요.</p>
+    <p class="lede">비북스 0.1평 서점에 오신 걸 환영해요. 비북스는 104개의 서가가 모인 서점이에요. 이 가이드는 세 부분으로 나뉘어 있어요. 차례대로 따라 하시면 따로 묻지 않아도 시작할 수 있어요.</p>
+    <div class="parts">
+      <a href="#part1"><span class="no">PART 1</span><b>점주 서가 이용 가이드</b><span>입고 · 판매 · 정산 · 서가 관리</span></a>
+      <a href="#part2"><span class="no">PART 2</span><b>점주 비북스 활용 가이드</b><span>모임 참여·개설 · 공간 대관 · 행사</span></a>
+      <a href="#part3"><span class="no">PART 3</span><b>점주 비북스 협업 가이드</b><span>함께 비북스를 키우는 방법</span></a>
+    </div>
   </header>
 
   <nav class="toc" aria-label="목차">
-    <a href="#flow">한눈에 보기</a><a href="#first">처음 할 일</a><a href="#stockin">입고하기</a><a href="#sales">판매</a><a href="#settle">정산</a><a href="#manage">서가 관리</a><a href="#space">공간 활용</a><a href="#mail">메일 알림</a><a href="#faq">자주 묻는 것</a>
+    <a href="#part1">1. 서가 이용</a><a href="#first">처음 할 일</a><a href="#stockin">입고</a><a href="#sales">판매</a><a href="#settle">정산</a><a href="#manage">서가 관리</a><a href="#part2">2. 비북스 활용</a><a href="#part3">3. 협업</a><a href="#faq">자주 묻는 것</a>
   </nav>
+
+  <div class="part" id="part1"><span class="no">PART 1</span><h2>점주 서가 이용 가이드</h2><p class="sub">내 0.1평 서가에 상품을 들이고, 팔고, 정산받고, 관리하는 방법이에요.</p></div>
 
   <section id="flow">
     <h2>한눈에 보기</h2>
@@ -252,6 +279,23 @@
     <p class="note"><b>가격을 바꾸고 싶을 때</b> — 중고·굿즈 판매가를 바꾸려면 비북스에 말씀해 주세요. 매장 포스 가격도 함께 바꿔야 해서 비북스가 처리해요.</p>
   </section>
 
+  <section id="mail">
+    <h2>메일 알림</h2>
+    <p class="sub">알림 메일을 등록하면 이런 소식을 받아요. 하루에 여러 건이면 한 통으로 묶어서 보내 드려요.</p>
+    <div class="table"><table>
+      <thead><tr><th>언제</th><th>받는 내용</th></tr></thead>
+      <tbody>
+        <tr><td class="n">입고 요청 승인</td><td>직접 입고는 "매장에 가져와 주세요", 주문은 "주문을 진행할게요"</td></tr>
+        <tr><td class="n">입고완료</td><td>서가 입고를 마쳤다는 안내 (개인 주문은 도착 안내)</td></tr>
+        <tr><td class="n">출고 · 재고 수정 반영</td><td>몇 개를 반영했는지</td></tr>
+        <tr><td class="n">월 정산 · 송금 완료</td><td>판매 수량·금액, 정산금액, 적립 또는 송금 내역</td></tr>
+      </tbody>
+    </table></div>
+    <a class="btn line" href="https://script.google.com/macros/s/AKfycbxllxFNt4rbOgA8xXxDMGywOWpv9beYOFIxma7bP7lh1zqAQ1lROxUfYdMZfGLYnNcF/exec?view=email" target="_blank" rel="noopener" style="justify-self:start">알림 메일 등록하기</a>
+  </section>
+
+  <div class="part" id="part2"><span class="no">PART 2</span><h2>점주 비북스 활용 가이드</h2><p class="sub">서가 밖에서도 비북스를 누리는 방법이에요. 모임에 참여하고, 직접 모임을 열고, 공간을 빌리고, 행사에 함께해요.</p></div>
+
   <section id="space">
     <h2>비북스 공간 활용</h2>
     <p class="sub">0.1평 서가 말고도 비북스 공간에서 모임에 참여하거나, 직접 모임을 열거나, 공간을 빌리거나, 행사에 셀러로 참여할 수 있어요. 모든 안내와 신청은 <a href="https://bbooks.co.kr/moim/" target="_blank" rel="noopener">비모임(b.moim) 페이지</a>에서 해요.</p>
@@ -321,19 +365,36 @@
     <p class="sub">비북스가 여는 북 & 플리마켓 <a href="https://box.bbooks.co.kr/" target="_blank" rel="noopener">비박스데이(b.box day)</a>에 내 부스를 열 수 있어요. 행사 공지가 나오면 신청하고, 안내에 따라 판매 물품을 등록해요. 행사 판매는 수수료 10%를 빼고 행사가 끝나면 바로 정산되고, 점주 페이지 정산 탭에 "비박스 판매 정산"으로 따로 보여요.</p>
   </section>
 
-  <section id="mail">
-    <h2>메일 알림</h2>
-    <p class="sub">알림 메일을 등록하면 이런 소식을 받아요. 하루에 여러 건이면 한 통으로 묶어서 보내 드려요.</p>
-    <div class="table"><table>
-      <thead><tr><th>언제</th><th>받는 내용</th></tr></thead>
-      <tbody>
-        <tr><td class="n">입고 요청 승인</td><td>직접 입고는 "매장에 가져와 주세요", 주문은 "주문을 진행할게요"</td></tr>
-        <tr><td class="n">입고완료</td><td>서가 입고를 마쳤다는 안내 (개인 주문은 도착 안내)</td></tr>
-        <tr><td class="n">출고 · 재고 수정 반영</td><td>몇 개를 반영했는지</td></tr>
-        <tr><td class="n">월 정산 · 송금 완료</td><td>판매 수량·금액, 정산금액, 적립 또는 송금 내역</td></tr>
-      </tbody>
-    </table></div>
-    <a class="btn line" href="https://script.google.com/macros/s/AKfycbxllxFNt4rbOgA8xXxDMGywOWpv9beYOFIxma7bP7lh1zqAQ1lROxUfYdMZfGLYnNcF/exec?view=email" target="_blank" rel="noopener" style="justify-self:start">알림 메일 등록하기</a>
+  <div class="part" id="part3"><span class="no">PART 3</span><h2>점주 비북스 협업 가이드</h2><p class="sub">비북스는 점주님들의 서가가 모여 만든 플랫폼이에요. 서점이 오래 이어지려면 책이 팔리고, 사람이 모이고, 연결이 생겨야 해요. 점주님이 이미 가진 일상과 네트워크로 비북스에 힘을 보탤 수 있는 방법을 모았어요.</p></div>
+
+  <section id="collab">
+    <div class="ways">
+      <div><span class="k">1. 내 책은 비북스에서</span><h3>개인 책 주문</h3>
+        <p>점주님이 읽고 싶은 책도 비북스에서 주문하세요. <b>점주 입고가(정가의 80%)</b>로 살 수 있어요.</p>
+        <ul><li>개인 링크 → <b>요청</b> → <b>입고 요청</b>에서 입고 방식을 <b>3. 개인 주문</b>으로 골라요</li>
+            <li>송금 또는 적립금으로 결제하고, 도착하면 매장에서 받아 가요</li>
+            <li>서가 재고·정산에는 들어가지 않아요</li></ul></div>
+      <div><span class="k">2. 주변의 책 주문을 비북스로</span><h3>지인 · 단체 주문 연결</h3>
+        <p>지인이 책을 산다고 할 때, 학교·교회·기관·모임에서 책을 한꺼번에 살 때 비북스를 연결해 주세요. 한 번의 단체 주문이 서점에는 큰 힘이 돼요.</p>
+        <ul><li>필요한 책 목록, 수량, 받을 날짜, 담당자 연락처를 비북스에 전해 주세요</li>
+            <li>견적과 주문, 받는 방법은 비북스가 맡아 안내해요</li>
+            <li>지인 책은 점주님이 개인 주문으로 넣어 직접 전해 주셔도 돼요</li></ul></div>
+      <div><span class="k">3. 기회를 비북스와 함께</span><h3>지원사업 · 협업 연결</h3>
+        <p>지역 문화·출판·독서 관련 지원사업이나 공모, 기관 협업 소식이 있으면 비북스를 공간이나 파트너로 연결해 주세요.</p>
+        <ul><li>점주님이 신청하는 사업에 비북스를 활동 공간으로 넣어 주셔도 좋아요</li>
+            <li>함께할 수 있는 사업 정보만 알려 주셔도 비북스가 검토해요</li>
+            <li>강연·북토크·워크숍 제안도 언제든 환영이에요</li></ul></div>
+      <div><span class="k">4. 연결의 힘</span><h3>모임 열기 · 알리기</h3>
+        <p>점주님이 여는 모임 하나, 공유한 게시물 하나가 비북스에 새로운 손님을 데려와요.</p>
+        <ul><li>내 서가와 어울리는 모임을 열어 보세요 (<a href="#space">PART 2</a>)</li>
+            <li>비모임·행사 소식을 SNS와 지인에게 나눠 주세요</li>
+            <li>비북스 인스타그램 @b_books2026을 태그해 주시면 함께 알려요</li></ul></div>
+    </div>
+    <div class="closing">
+      <h3>비북스가 단단히 뿌리내릴 수 있도록</h3>
+      <p>비북스는 104개의 서가와 그 주인들이 함께 만드는 플랫폼이에요. 점주님 한 분 한 분이 가진 네트워크와 연결이 모이면 비북스는 동네에 오래 남는 서점이 돼요. 책 주문 하나, 소개 한 번, 모임 하나로 힘을 보태 주세요.</p>
+      <p>주문·연결·제안은 비북스 카카오톡 채널이나 인스타그램 @b_books2026으로 편하게 보내 주세요.</p>
+    </div>
   </section>
 
   <section id="faq">
@@ -349,6 +410,7 @@
       <details><summary>모임을 열 때 대관도 따로 신청해야 하나요?</summary><p>아니요. 모임 열기 신청서의 "희망 공간"에서 고르면 공간도 함께 잡아 드려요. 대관은 비모임으로 공개하지 않는 우리끼리 모임에 쓰는 신청이에요.</p></details>
       <details><summary>내가 연 모임의 참가비는 언제, 어떻게 받나요?</summary><p>모임을 마치면 바로 정산해요. 받은 참가비에서 공간 이용료를 뺀 금액을 비북스 적립금으로 넣어 드려요.</p></details>
       <details><summary>내가 연 모임의 신청 현황은 어디서 보나요?</summary><p>모임 페이지가 열릴 때 받는 호스트 전용 현황 링크에서 신청 인원과 입금 상태를 언제든 볼 수 있어요. 링크는 다른 분께 공유하지 마세요.</p></details>
+      <details><summary>지인이나 학교·교회에서 책을 사려고 해요. 어떻게 연결하나요?</summary><p>필요한 책 목록, 수량, 받을 날짜, 담당자 연락처를 비북스 카카오톡 채널로 보내 주세요. 견적과 주문, 받는 방법은 비북스가 안내해요.</p></details>
       <details><summary>입고 요청을 취소하고 싶어요.</summary><p>비북스에 말씀해 주시면 요청을 정리해 드려요.</p></details>
     </div>
   </section>
