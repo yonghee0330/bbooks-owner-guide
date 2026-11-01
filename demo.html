@@ -401,7 +401,7 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
     el.innerHTML = h;
   }
 
-  // ---------- 입고 요청 (여러 권 · 알라딘 검색) ----------
+  // ---------- 입고 요청 (여러 권 · 카카오 책 검색) ----------
   var FEE = {
     '중고': '판매 시 수수료 15% · 판매가의 85%를 정산해 드려요.',
     '굿즈': '판매 시 수수료 15% · 판매가의 85%를 정산해 드려요.',
@@ -474,7 +474,7 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
     if (reqMode !== 'in') { renderStockReq(el, reqMode); return; }
     var h = '';
     if (D.bookSearch) {
-      h += '<div class="box"><h3>책 찾기 <small>알라딘 검색</small></h3>' +
+      h += '<div class="box"><h3>책 찾기 <small>카카오 책 검색</small></h3>' +
         '<form class="sbar" id="sForm" autocomplete="off"><input type="search" id="sq" placeholder="제목, 저자 또는 ISBN" enterkeyhint="search">' +
         '<button class="btn2 dark" type="submit" id="sBtn">검색</button></form>' +
         '<div class="msg" id="sMsg"></div><div class="results" id="results"></div>' +
@@ -527,7 +527,7 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
       return '<div class="res">' + (b.cover ? '<img src="' + esc(b.cover) + '" alt="" loading="lazy">' : '<span class="noimg"></span>') +
         '<div class="main"><div class="t">' + esc(b.title) + '</div>' +
         '<div class="m">' + [b.author, b.publisher, b.pubDate ? b.pubDate.replace('-', '.') : ''].filter(Boolean).map(esc).join(' · ') + '</div>' +
-        '<div class="m num">정가 ' + (b.listPrice ? won(b.listPrice) : '정보 없음') + '</div></div>' +
+        '<div class="m num">정가 ' + (b.listPrice ? won(b.listPrice) : '정보 없음') + (b.status && b.status !== '정상판매' ? ' · <b>' + esc(b.status) + '</b>' : '') + '</div></div>' +
         '<button class="btn2 add" type="button" data-r="' + i + '" data-in="' + (c ? 1 : 0) + '">' + (c ? '담김 ' + c.qty : '담기') + '</button></div>';
     }).join('');
     el.querySelectorAll('.add').forEach(function (bt) {
