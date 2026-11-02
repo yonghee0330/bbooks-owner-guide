@@ -136,6 +136,17 @@
   .ci .seg button { flex: 1; min-width: 0; padding: 7px 8px; font-size: 13px; }
   .ci .seg { flex-wrap: nowrap; }
   .ci .seg button:disabled { opacity: .4; cursor: not-allowed; }
+  .ci .mhelp { display: grid; gap: 3px; font-size: 12.5px; color: var(--faint); margin-top: -2px; }
+  .ci .mhelp div { display: flex; gap: 6px; }
+  .ci .mhelp b { flex-shrink: 0; width: 64px; font-weight: 600; }
+  .ci .mhelp .on { color: var(--ink); }
+  .ci .mhelp .on b { color: var(--accent); }
+  .ci .mhelp .no { text-decoration: line-through; text-decoration-color: var(--faint); }
+  .stk { display: inline-block; font-size: 11.5px; font-weight: 700; padding: 1px 7px; border-radius: 6px; margin-top: 4px; }
+  .stk.ok { background: var(--accent-soft); color: var(--accent); }
+  .stk.warn { background: var(--amber-soft); color: var(--amber); }
+  .stk.bad { background: var(--red-soft); color: var(--red); }
+   .ci .stkline { font-size: 12.5px; color: var(--red); background: var(--red-soft); border-radius: 8px; padding: 6px 9px; }
   .ci .feeline { font-size: 12px; color: var(--accent); background: var(--accent-soft); border-radius: 8px; padding: 6px 9px; }
   .ci .num { font-variant-numeric: tabular-nums; }
   .reqmode { margin-bottom: 12px; flex-wrap: nowrap; }
@@ -169,7 +180,7 @@
   .error p { color: var(--sub); }
 </style>
 <script>window.google={script:{run:(function(){var s,f;var r={withSuccessHandler:function(x){s=x;return r},withFailureHandler:function(x){f=x;return r},
-searchBooks:function(k,q){setTimeout(function(){s({total:3,items:[{"title":"밤의 도서관을 걷는 법","sub":"","author":"윤서하","publisher":"달빛서가","listPrice":16800,"isbn":"9791100000011","cover":"","pubDate":"2025-03"},{"title":"밤의 문장들","sub":"잠들기 전 읽는 짧은 글","author":"이도윤 외","publisher":"작은숲","listPrice":14000,"isbn":"9791100000028","cover":"","pubDate":"2024-11"},{"title":"밤 산책자의 노트","sub":"","author":"한여름","publisher":"느린시","listPrice":12500,"isbn":"9791100000035","cover":"","pubDate":"2023-06"}].filter(function(b){return /^97/.test(q.replace(/-/g,''))?b.isbn===q.replace(/-/g,''):true})})},300)},
+searchBooks:function(k,q){setTimeout(function(){s({total:3,items:[{"title":"밤의 도서관을 걷는 법","sub":"","author":"윤서하","publisher":"달빛서가","listPrice":16800,"isbn":"9791100000011","cover":"","pubDate":"2025-03","status":"정상판매"},{"title":"밤의 문장들","sub":"잠들기 전 읽는 짧은 글","author":"이도윤 외","publisher":"작은숲","listPrice":14000,"isbn":"9791100000028","cover":"","pubDate":"2024-11","status":"품절·절판"},{"title":"밤 산책자의 노트","sub":"","author":"한여름","publisher":"느린시","listPrice":12500,"isbn":"9791100000035","cover":"","pubDate":"2023-06","status":"예약판매"}].filter(function(b){return /^97/.test(q.replace(/-/g,''))?b.isbn===q.replace(/-/g,''):true})})},300)},
 submitStockRequest:function(k,fd){setTimeout(function(){var L=DATA.stockReqs||(DATA.stockReqs=[]);fd.items.forEach(function(x){var it=DATA.items.filter(function(i){return i.k===x.k})[0]||{};L.unshift({at:'2026-09-27 10:00',kind:fd.kind,t:it.t,q:+x.q,cur:it.l,st:'대기',memo:''})});s(L)},300)},
 submitRequest:function(k,fd){setTimeout(function(){(fd.items||[fd]).forEach(function(it){DATA.requests.unshift({at:'2026-09-27 10:00',t:it.title+(it.author?' ('+it.author+')':''),ty:it.type,q:+it.qty,mt:(it.type==='새책'?it.method:'직접 입고')+(it.type==='새책'&&it.method==='비북스 도매주문'?' · '+fd.pay:''),st:'대기',memo:''})});s(DATA.requests)},400)}};return r})()}};</script></head>
 <body>
@@ -417,7 +428,7 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
   function newItem(b) {
     return { id: 'c' + Date.now().toString(36) + (uid++), src: b ? 'search' : 'manual', title: b ? b.title : '', author: b ? b.author : '',
              publisher: b ? b.publisher : '', isbn: b ? b.isbn : '', cover: b ? b.cover : '', listPrice: b && b.listPrice ? b.listPrice : '',
-             type: '새책', method: '직접 입고', qty: 1, price: '' };
+             type: '새책', method: '직접 입고', qty: 1, price: '', stock: b ? (b.status || '') : '' };
   }
   function isWs(c) { return c.type === '새책' && (c.method === '비북스 도매주문' || c.method === '개인 주문'); }   // 비북스가 주문하고 점주가 값을 내는 것
   function unitCost(c) { return Math.round((+c.listPrice || 0) * WR); }
@@ -519,6 +530,13 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
       })
       .searchBooks(D.k, q);
   }
+  /** 카카오 책 검색의 판매상태 (빈 값 + 판매가 없음 = 품절·절판·구판). 품절·절판이면 도매·개인 주문을 막음 */
+  function noOrder(st) { return /품절|절판/.test(st || ''); }
+  function stockBadge(c) {
+    if (!c.stock) return '';
+    var cls = c.stock === '정상판매' ? 'ok' : noOrder(c.stock) ? 'bad' : 'warn';
+    return '<span class="stk ' + cls + '">' + esc(c.stock) + '</span>';
+  }
   function inCart(b) { return cart.filter(function (c) { return c.isbn && c.isbn === b.isbn; })[0]; }
   function renderResults() {
     var el = document.getElementById('results');
@@ -527,7 +545,7 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
       return '<div class="res">' + (b.cover ? '<img src="' + esc(b.cover) + '" alt="" loading="lazy">' : '<span class="noimg"></span>') +
         '<div class="main"><div class="t">' + esc(b.title) + '</div>' +
         '<div class="m">' + [b.author, b.publisher, b.pubDate ? b.pubDate.replace('-', '.') : ''].filter(Boolean).map(esc).join(' · ') + '</div>' +
-        '<div class="m num">정가 ' + (b.listPrice ? won(b.listPrice) : '정보 없음') + (b.status && b.status !== '정상판매' ? ' · <b>' + esc(b.status) + '</b>' : '') + '</div></div>' +
+        '<div class="m num">정가 ' + (b.listPrice ? won(b.listPrice) : '정보 없음') + '</div>' + (b.status && b.status !== '정상판매' ? stockBadge({ stock: b.status }) : '') + '</div>' +
         '<button class="btn2 add" type="button" data-r="' + i + '" data-in="' + (c ? 1 : 0) + '">' + (c ? '담김 ' + c.qty : '담기') + '</button></div>';
     }).join('');
     el.querySelectorAll('.add').forEach(function (bt) {
@@ -558,13 +576,22 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
             '<label>출판사<input type="text" data-f="publisher" maxlength="60" value="' + esc(c.publisher) + '"></label></div></div>'
         : (c.cover ? '<img src="' + esc(c.cover) + '" alt="">' : '') +
           '<div class="main"><div class="t">' + esc(c.title) + '</div><div class="m">' + [c.author, c.publisher].filter(Boolean).map(esc).join(' · ') + '</div>' +
-          (c.isbn ? '<div class="m num">ISBN ' + esc(c.isbn) + '</div>' : '') + '</div>';
+          (c.isbn ? '<div class="m num">ISBN ' + esc(c.isbn) + '</div>' : '') + stockBadge(c) + '</div>';
+      var blocked = noOrder(c.stock);
+      if (blocked && c.method !== '직접 입고') c.method = '직접 입고';
+      var orderOff = !isNew ? ' disabled title="새책만 가능해요"' : blocked ? ' disabled title="' + esc(c.stock) + '된 책은 주문할 수 없어요"' : '';
       return '<div class="ci" data-i="' + i + '"><div class="top">' + head + '<button class="del" type="button" data-del="' + i + '" aria-label="빼기">빼기</button></div>' +
         '<div class="seg" data-seg="type">' + ['새책', '중고', '굿즈'].map(function (t) { return '<button type="button" data-v="' + t + '" aria-pressed="' + (c.type === t) + '">' + t + '</button>'; }).join('') + '</div>' +
         '<div class="seg" data-seg="method">' +
           '<button type="button" data-v="직접 입고" aria-pressed="' + (c.method === '직접 입고') + '">1. 직접 입고</button>' +
-          '<button type="button" data-v="비북스 도매주문" aria-pressed="' + (c.method === '비북스 도매주문') + '"' + (isNew ? '' : ' disabled title="도매주문은 새책만 가능해요"') + '>2. 도매주문</button>' +
-          '<button type="button" data-v="개인 주문" aria-pressed="' + (c.method === '개인 주문') + '"' + (isNew ? '' : ' disabled title="개인 주문은 새책만 가능해요"') + '>3. 개인 주문</button></div>' +
+          '<button type="button" data-v="비북스 도매주문" aria-pressed="' + (c.method === '비북스 도매주문') + '"' + orderOff + '>2. 도매주문</button>' +
+          '<button type="button" data-v="개인 주문" aria-pressed="' + (c.method === '개인 주문') + '"' + orderOff + '>3. 개인 주문</button></div>' +
+        '<div class="mhelp">' +
+          '<div class="' + (c.method === '직접 입고' ? 'on' : '') + '"><b>1. 직접 입고</b><span>점주님이 가진 책이나 굿즈를 직접 가져다 놓아요</span></div>' +
+          '<div class="' + (c.method === '비북스 도매주문' ? 'on' : '') + (orderOff ? ' no' : '') + '"><b>2. 도매주문</b><span>비북스를 통해 도매처에서 주문해 서가에 놓아요 (새책)</span></div>' +
+          '<div class="' + (c.method === '개인 주문' ? 'on' : '') + (orderOff ? ' no' : '') + '"><b>3. 개인 주문</b><span>서가 입고용이 아니라 점주님이 보실 책을 주문해요 (재고 반영 안 됨)</span></div>' +
+        '</div>' +
+        (blocked && isNew ? '<div class="stkline"><b>' + esc(c.stock) + '</b>된 책이라 도매처에서 주문할 수 없어요. 가지고 계신 책이면 직접 입고로 보내 주세요.</div>' : '') +
         '<div class="grid" style="grid-template-columns:.8fr 1fr 1fr">' +
           '<label>수량<input type="number" data-f="qty" min="1" max="999" inputmode="numeric" value="' + esc(c.qty) + '"></label>' +
           '<label>정가<input type="number" data-f="listPrice" min="0" inputmode="numeric" placeholder="원" value="' + esc(c.listPrice) + '"></label>' +
@@ -611,7 +638,7 @@ var DATA = {"owner":{"id":"B-00","name":"오늘의 서가 (예시)","shelves":["
     if (err) { msg.className = 'msg err'; msg.textContent = err; return; }
     var payload = { memo: memo, pay: pay, items: cart.map(function (c) {
       return { type: c.type, method: c.method, title: c.title, author: c.author, publisher: c.publisher, isbn: c.isbn, qty: c.qty,
-               listPrice: c.listPrice, price: c.type === '새책' ? c.listPrice : c.price };
+               listPrice: c.listPrice, price: c.type === '새책' ? c.listPrice : c.price, stock: c.stock || '' };
     }) };
     var n0 = cart.length;
     btn.disabled = true; btn.textContent = '보내는 중…'; msg.className = 'msg';
